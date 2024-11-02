@@ -1,1 +1,1 @@
-# Smart-Watering-System
+# Smart Watering System with IoT for Sustainability 🌱
