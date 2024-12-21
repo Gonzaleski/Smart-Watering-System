@@ -3,6 +3,7 @@ import os
 import datetime
 import requests
 import dropbox
+from dropbox import DropboxOAuth2FlowNoRedirect
 import pandas as pd
 from picamera2 import Picamera2
 from dotenv import load_dotenv
@@ -47,8 +48,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(RELAY_PIN, GPIO.OUT)
 
 # Dropbox Configuration
-DROPBOX_ACCESS_TOKEN = os.getenv('DROPBOX_ACCESS_TOKEN')
-dropbox_client = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+APP_KEY = os.getenv("DROPBOX_APP_KEY")
+REFRESH_TOKEN = os.getenv("DROPBOX_REFRESH_TOKEN")
 
 # Directory to save pictures
 SAVE_DIR = "/home/aradskn/Pictures"
@@ -108,12 +109,23 @@ def take_picture():
     print(f"Picture saved locally as {filename}")
     return filepath
 
+def get_dropbox_client():
+    return dropbox.Dropbox(
+        oauth2_refresh_token=REFRESH_TOKEN,
+        app_key=APP_KEY
+    )
+
 def upload_to_dropbox(local_path):
     """Upload a file to Dropbox."""
-    with open(local_path, "rb") as file:
-        dropbox_path = f"/{os.path.basename(local_path)}"  # Save in the root directory
-        dropbox_client.files_upload(file.read(), dropbox_path)
-        print(f"Uploaded {local_path} to Dropbox at {dropbox_path}")
+    try:
+        # Refresh the client in case the token is expired
+        dropbox_client = get_dropbox_client()
+        with open(local_path, "rb") as file:
+            dropbox_path = f"/{os.path.basename(local_path)}"  # Save in the root directory
+            dropbox_client.files_upload(file.read(), dropbox_path)
+            print(f"Uploaded {local_path} to Dropbox at {dropbox_path}")
+    except Exception as e:
+        print(f"Error uploading to Dropbox: {e}")
 
 try:
     while True:
