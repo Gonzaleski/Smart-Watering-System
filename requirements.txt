@@ -8,3 +8,6 @@ pandas
 scikit-learn
 python-dotenv
 smbus2
+picamera2
+dropbox
+adafruit-mcp3008
