@@ -4,10 +4,8 @@ import datetime
 import requests
 import dropbox
 import pandas as pd
-import numpy as np
 from picamera2 import Picamera2
 from dotenv import load_dotenv
-from sklearn.preprocessing import StandardScaler
 from joblib import load
 import RPi.GPIO as GPIO
 import adafruit_dht
@@ -19,16 +17,15 @@ from smbus2 import SMBus
 # Load environment variables from .env file
 load_dotenv()
 
-# Scaler
-scaler = StandardScaler()
+# Load pre-trained model and scaler
+MODEL_PATH = 'model.pkl'
+SCALER_PATH = 'scaler.pkl'
+model = load(MODEL_PATH)
+scaler = load(SCALER_PATH)
 
 # ThingSpeak Configuration
 THINGSPEAK_WRITE_API_KEY = os.getenv('THINGSPEAK_WRITE_API_KEY')
 THINGSPEAK_URL = f'https://api.thingspeak.com/update?api_key={THINGSPEAK_WRITE_API_KEY}'
-
-# Load pre-trained model
-MODEL_PATH = 'model.pkl'
-model = load(MODEL_PATH)
 
 # Sensor setup
 dht_sensor = adafruit_dht.DHT22(board.D17)  # GPIO17 for DHT22 data
@@ -58,7 +55,7 @@ SAVE_DIR = "/home/aradskn/Pictures"
 
 # Picamera2 Initialization
 picam2 = Picamera2()
-picam2.configure(picam2.create_still_configuration(main={"size": (3280, 2464)})) 
+picam2.configure(picam2.create_still_configuration(main={"size": (3280, 2464)}))
 
 def read_dht22():
     try:
@@ -125,36 +122,43 @@ try:
         soil_moisture = read_soil_moisture()
         light_level = read_light_sensor()
 
+        # Check for valid sensor data
+        if temperature is None or humidity is None or light_level is None:
+            print("Skipping prediction due to incomplete sensor data.")
+            time.sleep(15)
+            continue
+
         # Print values to console
-        if temperature is not None and humidity is not None:
-            print(f"Temperature: {temperature:.1f}C, Humidity: {humidity:.1f}%")
-        print(f"Soil Moisture: {soil_moisture:.1f}%")  # Display percentage
-        if light_level is not None:
-            print(f"Light Level: {light_level} lx")
+        print(f"Temperature: {temperature:.1f}C, Humidity: {humidity:.1f}%")
+        print(f"Soil Moisture: {soil_moisture:.1f}%")
+        print(f"Light Level: {light_level} lx")
 
         # Prepare data for prediction
-        if temperature is not None and humidity is not None and light_level is not None:
-            new_data = pd.DataFrame([[soil_moisture, temperature, humidity, light_level]], 
-                                    columns=['Soil Moisture (%)', 'Temperature (°C)', 'Humidity (%)', 'Light Level (lx)'])
-            valve_duration = model.predict(scaler.fit_transform(new_data))[0]  # Predict valve duration
+        new_data = pd.DataFrame([[soil_moisture, temperature, humidity, light_level]], 
+                                columns=['Soil Moisture (%)', 'Temperature (°C)', 'Humidity (%)', 'Light Level (lx)'])
+        scaled_data = scaler.transform(new_data)
+        valve_duration = model.predict(scaled_data)[0]
 
-            # Control the relay based on valve duration
-            if valve_duration > 0.1:
-                GPIO.output(RELAY_PIN, GPIO.HIGH)  # Turn on the relay
-                time.sleep(valve_duration)          # Keep the valve open for the calculated duration
-                GPIO.output(RELAY_PIN, GPIO.LOW)   # Turn off the relay
+        # Clamp the valve duration
+        valve_duration = max(0.1, min(5, valve_duration))
 
-            print(f"Predicted Valve Duration: {valve_duration:.1f} seconds")
+        # Control the relay
+        if valve_duration > 0.1:
+            GPIO.output(RELAY_PIN, GPIO.HIGH)  # Turn on the relay
+            time.sleep(valve_duration)         # Keep the valve open for the calculated duration
+            GPIO.output(RELAY_PIN, GPIO.LOW)  # Turn off the relay
 
-            # Send all sensor data and valve duration to ThingSpeak
-            send_data_to_thingspeak(temperature, humidity, soil_moisture, light_level, valve_duration)
+        print(f"Predicted Valve Duration: {valve_duration:.1f} seconds")
 
-            # Capture Image and upload to Dropbox
-            image_path = take_picture()
-            upload_to_dropbox(image_path)
+        # Send all sensor data and valve duration to ThingSpeak
+        send_data_to_thingspeak(temperature, humidity, soil_moisture, light_level, valve_duration)
+
+        # Capture Image and upload to Dropbox
+        image_path = take_picture()
+        upload_to_dropbox(image_path)
 
         # Wait before reading again
-        time.sleep(15)  # 20 minutes
+        time.sleep(15)
 except KeyboardInterrupt:
     print("Program stopped")
 finally:
