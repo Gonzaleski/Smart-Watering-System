@@ -1,17 +1,20 @@
 import time
+import os
+import datetime
+import requests
+import dropbox
+import pandas as pd
+import numpy as np
+from picamera2 import Picamera2
+from dotenv import load_dotenv
+from sklearn.preprocessing import StandardScaler
+from joblib import load
+import RPi.GPIO as GPIO
 import adafruit_dht
 import board
-import os
-import RPi.GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 from smbus2 import SMBus
-import requests
-from joblib import load
-import numpy as np
-import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -45,6 +48,17 @@ i2c_bus = SMBus(1)  # I2C bus
 RELAY_PIN = 27
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(RELAY_PIN, GPIO.OUT)
+
+# Dropbox Configuration
+DROPBOX_ACCESS_TOKEN = os.getenv('DROPBOX_ACCESS_TOKEN')
+dropbox_client = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+
+# Directory to save pictures
+SAVE_DIR = "/home/aradskn/Pictures"
+
+# Picamera2 Initialization
+picam2 = Picamera2()
+picam2.configure(picam2.create_still_configuration(main={"size": (3280, 2464)})) 
 
 def read_dht22():
     try:
@@ -86,6 +100,24 @@ def send_data_to_thingspeak(temperature, humidity, soil_moisture, light_level, v
     except Exception as e:
         print("Error sending data to ThingSpeak:", e)
 
+def take_picture():
+    """Capture an image with Picamera2."""
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"image_{timestamp}.jpg"
+    filepath = os.path.join(SAVE_DIR, filename)
+    picam2.start()
+    picam2.capture_file(filepath)
+    picam2.stop()
+    print(f"Picture saved locally as {filename}")
+    return filepath
+
+def upload_to_dropbox(local_path):
+    """Upload a file to Dropbox."""
+    with open(local_path, "rb") as file:
+        dropbox_path = f"/{os.path.basename(local_path)}"  # Save in the root directory
+        dropbox_client.files_upload(file.read(), dropbox_path)
+        print(f"Uploaded {local_path} to Dropbox at {dropbox_path}")
+
 try:
     while True:
         # Read sensor values
@@ -102,7 +134,8 @@ try:
 
         # Prepare data for prediction
         if temperature is not None and humidity is not None and light_level is not None:
-            new_data = pd.DataFrame([[soil_moisture, temperature, humidity, light_level]], columns=['Soil Moisture (%)', 'Temperature (°C)', 'Humidity (%)', 'Light Level (lx)'])
+            new_data = pd.DataFrame([[soil_moisture, temperature, humidity, light_level]], 
+                                    columns=['Soil Moisture (%)', 'Temperature (°C)', 'Humidity (%)', 'Light Level (lx)'])
             valve_duration = model.predict(scaler.fit_transform(new_data))[0]  # Predict valve duration
 
             # Control the relay based on valve duration
@@ -116,8 +149,12 @@ try:
             # Send all sensor data and valve duration to ThingSpeak
             send_data_to_thingspeak(temperature, humidity, soil_moisture, light_level, valve_duration)
 
+            # Capture Image and upload to Dropbox
+            image_path = take_picture()
+            upload_to_dropbox(image_path)
+
         # Wait before reading again
-        time.sleep(10 * 60)  # 5 minutes
+        time.sleep(15)  # 20 minutes
 except KeyboardInterrupt:
     print("Program stopped")
 finally:
