@@ -68,9 +68,13 @@ def read_dht22():
         return None, None
 
 def read_soil_moisture():
-    soil_moisture = mcp.read_adc(SOIL_CHANNEL)
-    soil_moisture_percentage = ((1023 - soil_moisture) / 1023) * 100
-    return soil_moisture_percentage
+    try:
+        soil_moisture = mcp.read_adc(SOIL_CHANNEL)
+        soil_moisture_percentage = ((1023 - soil_moisture) / 1023) * 100
+        return soil_moisture_percentage
+    except Exception as e:
+        print("Soil moisture sensor error:", e)
+        return None
 
 def read_light_sensor():
     try:
@@ -100,14 +104,18 @@ def send_data_to_thingspeak(temperature, humidity, soil_moisture, light_level, v
 
 def take_picture():
     """Capture an image with Picamera2."""
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"image_{timestamp}.jpg"
-    filepath = os.path.join(SAVE_DIR, filename)
-    picam2.start()
-    picam2.capture_file(filepath)
-    picam2.stop()
-    print(f"Picture saved locally as {filename}")
-    return filepath
+    try:
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"image_{timestamp}.jpg"
+        filepath = os.path.join(SAVE_DIR, filename)
+        picam2.start()
+        picam2.capture_file(filepath)
+        picam2.stop()
+        print(f"Picture saved locally as {filename}")
+        return filepath
+    except Exception as e:
+        print("Error taking picture:", e)
+        return None
 
 def get_dropbox_client():
     try:
@@ -121,6 +129,9 @@ def get_dropbox_client():
 
 def upload_to_dropbox(local_path):
     """Upload a file to Dropbox."""
+    if local_path is None:
+        print("No local path provided for upload.")
+        return
     try:
         dropbox_client = get_dropbox_client()
         if dropbox_client is None:
@@ -150,25 +161,28 @@ try:
 
         # Print values to console
         print(f"Temperature: {temperature:.1f}C, Humidity: {humidity:.1f}%")
-        print(f"Soil Moisture: {soil_moisture:.1f}%")
-        print(f"Light Level: {light_level} lx")
+        print(f"Soil Moisture: {soil_moisture:.1f}%" if soil_moisture is not None else "Soil Moisture: Unknown")
+        print(f"Light Level: {light_level} lx" if light_level is not None else "Light Level: Unknown")
 
         # Prepare data for prediction
-        new_data = pd.DataFrame([[soil_moisture, temperature, humidity, light_level]], 
-                                columns=['Soil Moisture (%)', 'Temperature (°C)', 'Humidity (%)', 'Light Level (lx)'])
-        scaled_data = scaler.transform(new_data)
-        valve_duration = model.predict(scaled_data)[0]
+        try:
+            new_data = pd.DataFrame([[soil_moisture, temperature, humidity, light_level]], 
+                                    columns=['Soil Moisture (%)', 'Temperature (°C)', 'Humidity (%)', 'Light Level (lx)'])
+            scaled_data = scaler.transform(new_data)
+            valve_duration = model.predict(scaled_data)[0]
 
-        # Clamp the valve duration
-        valve_duration = max(0.1, min(5, valve_duration))
+            # Clamp the valve duration
+            valve_duration = max(0.1, min(5, valve_duration))
 
-        # Control the relay
-        if valve_duration > 0.1:
-            GPIO.output(RELAY_PIN, GPIO.HIGH)  # Turn on the relay
-            time.sleep(valve_duration)         # Keep the valve open for the calculated duration
-            GPIO.output(RELAY_PIN, GPIO.LOW)  # Turn off the relay
+            # Control the relay
+            if valve_duration > 0.1:
+                GPIO.output(RELAY_PIN, GPIO.HIGH)  # Turn on the relay
+                time.sleep(valve_duration)         # Keep the valve open for the calculated duration
+                GPIO.output(RELAY_PIN, GPIO.LOW)  # Turn off the relay
 
-        print(f"Predicted Valve Duration: {valve_duration:.1f} seconds")
+            print(f"Predicted Valve Duration: {valve_duration:.1f} seconds")
+        except Exception as e:
+            print("Error during prediction:", e)
 
         # Send all sensor data and valve duration to ThingSpeak
         send_data_to_thingspeak(temperature, humidity, soil_moisture, light_level, valve_duration)
