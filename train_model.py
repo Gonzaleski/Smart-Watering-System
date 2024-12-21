@@ -23,6 +23,7 @@ mlp_model = MLPRegressor(hidden_layer_sizes=(64, 32, 16), activation='relu',
                          solver='adam', max_iter=500, random_state=42)
 mlp_model.fit(X_train, y_train)
 
-# Save the trained model
+# Save the trained model and scaler
 dump(mlp_model, 'model.pkl')
-print("Model trained and saved successfully.")
+dump(scaler, 'scaler.pkl')
+print("Model and scaler trained and saved successfully.")
