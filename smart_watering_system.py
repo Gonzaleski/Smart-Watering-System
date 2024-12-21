@@ -110,20 +110,28 @@ def take_picture():
     return filepath
 
 def get_dropbox_client():
-    return dropbox.Dropbox(
-        oauth2_refresh_token=REFRESH_TOKEN,
-        app_key=APP_KEY
-    )
+    try:
+        return dropbox.Dropbox(
+            oauth2_refresh_token=REFRESH_TOKEN,
+            app_key=APP_KEY
+        )
+    except dropbox.exceptions.AuthError as e:
+        print(f"Authentication error: {e}")
+        return None
 
 def upload_to_dropbox(local_path):
     """Upload a file to Dropbox."""
     try:
-        # Refresh the client in case the token is expired
         dropbox_client = get_dropbox_client()
+        if dropbox_client is None:
+            print("Could not get Dropbox client. Exiting upload.")
+            return
         with open(local_path, "rb") as file:
             dropbox_path = f"/{os.path.basename(local_path)}"  # Save in the root directory
             dropbox_client.files_upload(file.read(), dropbox_path)
             print(f"Uploaded {local_path} to Dropbox at {dropbox_path}")
+    except dropbox.exceptions.AuthError as e:
+        print(f"Authentication error during upload: {e}")
     except Exception as e:
         print(f"Error uploading to Dropbox: {e}")
 
