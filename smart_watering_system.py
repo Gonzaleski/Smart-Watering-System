@@ -192,7 +192,7 @@ try:
         upload_to_dropbox(image_path)
 
         # Wait before reading again
-        time.sleep(60 * 60)    #  1 hour
+        time.sleep(4 * 60 * 60)    # Every 4 hours
 except KeyboardInterrupt:
     print("Program stopped")
 finally:
