@@ -11,3 +11,4 @@ smbus2
 picamera2
 dropbox
 adafruit-mcp3008
+onnxruntime
