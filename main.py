@@ -69,7 +69,7 @@ try:
             if image_path:
                 dropbox_uploader.upload(image_path)
 
-        time.sleep(3 * 60 * 60)  # Delay for 3 hours
+        time.sleep(2 * 60 * 60)  # Delay for 2 hours
 except KeyboardInterrupt:
     print("Stopping program.")
 finally:
