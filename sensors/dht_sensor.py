@@ -8,7 +8,8 @@ class DHTSensor:
         try:
             temperature = self.sensor.temperature
             humidity = self.sensor.humidity
-            print("Temperature: ", temperature, " ºC\n", "Humidity: ", humidity, "%")
+            print("Temperature:", temperature, "ºC")
+            print("Humidity:", humidity, "%")
             return temperature, humidity
         except RuntimeError as e:
             print("DHT22 error:", e)

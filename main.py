@@ -22,9 +22,9 @@ soil_moisture_sensor = SoilMoistureSensor()
 light_sensor = LightSensor()
 thingspeak = ThingSpeak()
 dropbox_uploader = DropboxUploader()
-picamera = PicameraHandler(save_dir='/home/aradskn/Pictures')  # Set your image save directory
+picamera = PicameraHandler(save_dir='/home/aradskn/Pictures')
 
-# Load normalization parameters (replace these with the actual values from your MATLAB script)
+# Load normalization parameters
 mean_values = [56.1591, 20.1222, 59.2810, 776.4685]
 std_values = [15.3452, 8.8366, 11.2722, 444.0649]
 
@@ -53,11 +53,12 @@ try:
 
             # Make prediction using the ONNX model
             predictions = session.run([output_name], {input_name: normalized_data})[0]
-            valve_duration = predictions[0][0]  # Assuming single output for valve duration
+            valve_duration = float(predictions[0][0])
+            print("Valve duration:", valve_duration, "s")
 
             # Activate the valve
             GPIO.output(RELAY_PIN, GPIO.HIGH)
-            time.sleep(float(valve_duration))
+            time.sleep(valve_duration)
             GPIO.output(RELAY_PIN, GPIO.LOW)
 
             # Send data to ThingSpeak
@@ -68,7 +69,7 @@ try:
             if image_path:
                 dropbox_uploader.upload(image_path)
 
-        time.sleep(600)  # Delay for 10 minutes
+        time.sleep(3 * 60 * 60)  # Delay for 3 hours
 except KeyboardInterrupt:
     print("Stopping program.")
 finally:

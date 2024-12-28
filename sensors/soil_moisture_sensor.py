@@ -10,7 +10,7 @@ class SoilMoistureSensor:
         try:
             soil_moisture = self.mcp.read_adc(self.SOIL_CHANNEL)
             soil_moisture_percentage = ((1023 - soil_moisture) / 1023) * 100
-            print("Soil Moisture: ", soil_moisture, "%")
+            print("Soil Moisture:", soil_moisture_percentage, "%")
             return soil_moisture_percentage
         except Exception as e:
             print("Soil moisture sensor error:", e)
