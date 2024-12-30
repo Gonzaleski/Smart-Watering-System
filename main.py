@@ -29,7 +29,7 @@ mean_values = [56.1591, 20.1222, 59.2810, 776.4685]
 std_values = [15.3452, 8.8366, 11.2722, 444.0649]
 
 # Load ONNX model
-onnx_model_path = "neural_net_model.onnx"
+onnx_model_path = "models/neural_network_model.onnx"
 session = ort.InferenceSession(onnx_model_path)
 
 # Get model input and output names
