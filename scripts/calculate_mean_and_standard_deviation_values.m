@@ -6,7 +6,6 @@ filename = '../data/system_data.csv';
 data = readtable(filename);
 
 % Extract features
-% Replace the feature column names with the actual names in your dataset.
 features = data{:, {'SoilMoisture___', 'Temperature__C_', 'Humidity___', 'LightLevel_lx_'}};
 
 % Calculate the mean of each feature
