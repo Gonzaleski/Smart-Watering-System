@@ -16,8 +16,11 @@ The Smart Watering System with IoT is a sustainable solution designed to optimiz
 - **Actuators**:
   - [Water pump](https://www.amazon.co.uk/dp/B0814HXWVV/ref=pe_27063361_487055811_TE_dp_2?th=1)
   - [2-channel 5V relay](https://thepihut.com/products/2-channel-relay-breakout-5v)
+- **Camera**
+  - [Raspberry Pi Camera Module 3 NoIR](https://thepihut.com/products/raspberry-pi-camera-module-3-noir)
 - **Additional Equipment**:
-  - [Bread board](https://www.amazon.co.uk/dp/B0B5TCKTQH/ref=pe_27063361_487055811_TE_dp_1)
-  - [Jumper wires](https://www.amazon.co.uk/dp/B0B5TCKTQH/ref=pe_27063361_487055811_TE_dp_1) 
+  - [Bread Board](https://www.amazon.co.uk/dp/B0B5TCKTQH/ref=pe_27063361_487055811_TE_dp_1)
+  - [Jumper Wires](https://www.amazon.co.uk/dp/B0B5TCKTQH/ref=pe_27063361_487055811_TE_dp_1)
+  - [STEMMA QT / Qwiic JST SH 4-pin to Premium Male Headers Cable (150mm Long)](https://thepihut.com/products/stemma-qt-qwiic-jst-sh-4-pin-to-premium-male-headers-cable)
   - Ethernet for stable connectivity.  
-  - Soil and live cress plants for real-world testing.  
+  - Soil and Cress seeds for real-world testing.  
