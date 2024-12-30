@@ -1,7 +1,7 @@
 # Smart Watering System with IoT 🌱
 
 ## **Project Overview**  
-The Smart Watering System with IoT is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors soil conditions and intelligently predicts watering needs, ensuring plants receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html#participate).  
+The Smart Watering System with IoT is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors soil conditions and intelligently predicts watering needs, ensuring plants receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).  
 
 ---
 
