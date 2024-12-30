@@ -1,9 +1,12 @@
-# Smart Watering System with IoT 🌱
+# Smart Watering System with IoT and Neural Network 🌱
+
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Project Components](#project-components)
+  - [Hardware](#hardware)
 
 ## **Project Overview**  
-The Smart Watering System with IoT is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors soil conditions and intelligently predicts watering needs, ensuring plants receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).  
-
----
+The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors plant conditions and intelligently predicts watering needs, ensuring they receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).  
 
 ## **Project Components**  
 
