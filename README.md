@@ -6,6 +6,7 @@
   - [Hardware](#hardware)
 - [Connectivity](#connectivity)
   - [Individual Sensor Setup](#individual-sensor-setup)
+  - [Complete System Wiring](#complete-system-wiring)
 - [Installation and Usage](#installation-and-usage)
   - [Prerequisites](#prerequisites)
   - [Steps](#steps)
@@ -109,6 +110,11 @@ The following figure illustrates the DHT22 Pinout:
 - Push the plastic clip back into place
 
 ![Camera Connection](https://github.com/user-attachments/assets/881ed0da-0683-4369-a13a-9bd4613cd9f2)
+
+### **Complete System Wiring**
+The complete system integrates all the sensors, water pump, and camera, ensuring seamless data collection and automation. The consolidated wiring diagram shows the connections for all components working together:
+
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/complete_circuit.png)
 
 ## **Installation and Usage**
 
