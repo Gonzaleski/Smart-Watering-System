@@ -4,7 +4,11 @@
 - [Project Overview](#project-overview)
 - [Project Components](#project-components)
   - [Hardware](#hardware)
+- [Installation and Usage](#installation-and-usage)
+  - [Prerequisites](#prerequisites)
+  - [Steps](#steps)
 - [Predictive Model Analysis](#predictive-model-analysis)
+  - [Training Phase](#training-phase)
   - [Model Evaluation Metrics](#model-evaluation-metrics)
   - [Residual Analysis](#residual-analysis)
 - [References](#references)
@@ -32,11 +36,112 @@ The Smart Watering System with Internet of Things (IoT) and Neural Network is a 
   - Ethernet for stable connectivity.  
   - Soil and Cress seeds for real-world testing.
  
+## **Installation and Usage**
+
+### **Prerequisites**
+- Hardware Components mentioned above for real-world testing
+- Python 3.11
+- MATLAB with Neural Network Toolbox
+- ThingSpeak, Dropbox, and Dataplicity accounts
+
+### **Steps**
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Gonzaleski/Smart-Watering-System.git
+```
+
+2. Go inside the reopsitory:
+
+```bash
+cd Smart-Watering-System
+```
+
+3. Install Python virtual environment package:
+
+```bash
+pip install virtualenv
+```
+
+4. Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+5. Activate the virtual environment:
+
+```bash
+source venv/bin/activate
+```
+
+6. Install the requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+7. Create a Dropbox App:
+
+- Login to https://www.dropbox.com/developers/apps
+- Tap on `Create App`
+- Select `Scoped access`
+- Select `App folder`
+- Give your app a name and tap on `Create App`
+- In `Settings`, record your App Key
+- In `Permissions`, `file.metadata.write`, `file.metadata.read`, `file.content.write`, and `file.content.read`
+- Click on `Submit`
+
+8. Get a Dropbox refresh token:
+
+```bash
+python scripts/get_refresh_token.py 
+```
+
+Record the value.
+
+9. Create a ThingSpeak Channel:
+
+- Login to https://thingspeak.mathworks.com/login?skipSSOCheck=true
+- Tap on `New Channel`
+- Give your channel a name and a description
+- `Field 1: Soil Mositure (%)`
+- `Field 2: Temperature (ºC)`
+- `Field 3: Humidity (%)`
+- `Field 4: Light (lux)`
+- `Field 5: Valve Duration`
+- `Save Channel`
+- In `API Keys`, redord your `Write API Key`
+
+10. Create the environmental variables:
+
+```bash
+nano .env
+```
+
+Paste the following code in it:
+
+```bash
+THINGSPEAK_WRITE_API_KEY="Your_ThingSpeak_Write_API_Key"
+DROPBOX_APP_KEY="Your_Dropbox_App_Key"
+DROPBOX_REFRESH_TOKEN="Refresh_Token_Recorded_Above"
+```
+
+Save the file:
+- `Cntrl+X`
+- `y`
+- `Enter`
+ 
 ## **Predictive Model Analysis**
 The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump based on environmental data. To ensure high accuracy and reliability, three models were evaluated:
 1. Linear Regression
 2. Random Forest
 3. Neural Network
+
+### **Training Phase**
+The script, `scripts/train_models.m`, prepares the data, trains the models, and saves them for further analysis and use. The trained models are integral to optimizing water usage by predicting the precise duration for which the valve should remain open based on environmental conditions.
+
+By leveraging MATLAB's robust computational tools, this script simplifies the process of developing, training, and evaluating models, ensuring consistency and accuracy at every step.
 
 ### **Model Evaluation Metrics**
 
