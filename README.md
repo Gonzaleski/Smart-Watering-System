@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [Project Overview](#project-overview)
+- [System Workflow](#system-workflow)
 - [Project Components](#project-components)
   - [Hardware](#hardware)
 - [Connectivity](#connectivity)
@@ -18,7 +19,33 @@
 - [References](#references)
 
 ## **Project Overview**  
-The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors plant conditions and intelligently predicts watering needs, ensuring they receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).  
+The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors plant conditions and intelligently predicts watering needs, ensuring they receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).
+
+## **System Workflow**
+The diagram below shows the workflow of the Smart Watering System. It demonstrates how data flows from sensors to data processing, decision-making, and ultimately, visualization and storage.
+
+```mermaid
+graph TD
+    A[Start] --> B[Run main.py every 2 hours]
+    B --> C[Measure sensor data using Python scripts]
+    C -->|Soil Moisture| D1[soil_moisture_sensor.py]
+    C -->|Temperature & Humidity| D2[dht_sensor.py]
+    C -->|Light Level| D3[light_sensor.py]
+    D1 --> E[Data Collected]
+    D2 --> E
+    D3 --> E
+    E --> F[Predict Valve Duration using Neural Network model]
+    F -->|Load model from neural_network_model.onnx| G[Prediction Completed]
+    G --> |Water the Plant| H[Operate 5V relay to control water pump]
+    H --> |Trigger Camera| I[picamera_handler.py]
+    I -->|Capture Image| J[Image File]
+    J -->|Save Locally| K[Local Storage on Raspberry Pi]
+    J --> |Get Dropbox Access Key using the Refresh Token| P[Dropbox Access Key]
+    P --> |Upload to Cloud using the Access Key| L[Dropbox Storage]
+    H --> |Send Data| M[ThingSpeak Channel]
+    M -->|Data Visualization and Analytics| N[ThingSpeak Dashboard]
+    N -->|Send alerts such as waterlog| O[Email]
+```
 
 ## **Project Components**  
 
@@ -39,7 +66,7 @@ The Smart Watering System with Internet of Things (IoT) and Neural Network is a 
   - [Jumper Wires](https://www.amazon.co.uk/dp/B0B5TCKTQH/ref=pe_27063361_487055811_TE_dp_1)
   - [STEMMA QT / Qwiic JST SH 4-pin to Premium Male Headers Cable (150mm Long)](https://thepihut.com/products/stemma-qt-qwiic-jst-sh-4-pin-to-premium-male-headers-cable)
   - Ethernet for stable connectivity.  
-  - Soil and Cress seeds for real-world testing.
+  - Soil and Cress seeds for real-world testing
  
 ## **Connectivity**
 This section outlines the wiring and setup for each individual sensor and the complete system. Fritzing circuit diagrams are included for visual guidance to ensure proper connections.
