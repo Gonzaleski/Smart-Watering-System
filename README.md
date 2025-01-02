@@ -11,7 +11,7 @@
   - [Training Phase](#training-phase)
   - [Model Evaluation Metrics](#model-evaluation-metrics)
   - [Residual Analysis](#residual-analysis)
-- [Plant Growth Timelapse](#plant-growth-timelapse)
+- [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
 
 ## **Project Overview**  
@@ -188,8 +188,8 @@ The residual distribution plot further highlights the differences:
 
 Based on the evaluation of RMSE, MAE, and residuals, the Neural Network demonstrated the highest accuracy and consistency among the three models. It successfully captured the complex relationships in the data, making it the most suitable choice for the Smart Watering System’s predictive model. This selection ensures optimal pump activation, minimizing water wastage while maintaining plant health.
 
-## **Plant Growth Timelapse**
-https://github.com/user-attachments/assets/fbd0ffad-9239-4f39-870f-d052120fa3cd
+## **Plant Growth Time-Lapse**
+https://github.com/user-attachments/assets/c895cc5b-4c57-4dc1-8868-7caac24ee6f7
 
 ## **References**
 - [Quatltrics, Interpreting Residual Plots to Improve Your Regression](https://www.qualtrics.com/support/stats-iq/analyses/regression-guides/interpreting-residual-plots-improve-regression/)
