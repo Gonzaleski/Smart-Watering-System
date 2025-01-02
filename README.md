@@ -43,15 +43,25 @@ The Smart Watering System with Internet of Things (IoT) and Neural Network is a 
 ## **Connectivity**
 This section outlines the wiring and setup for each individual sensor and the complete system. Fritzing circuit diagrams are included for visual guidance to ensure proper connections.
 
+The following figure illustrates the Rasberry Pi 3 Model B+ Pinout:
+
+![Raspberry Pi 3 Model B+ Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/raspberry_pi_3_pinout.png) 
+
 ### **Individual Sensor Setup**
 1. Soil Moisture Sensor and MCP3008 ADC
+
+The following figure illustrates the MCP3008 Pinout:
+
+![MCP3008 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/MCP3008_pinout.png) 
+
 - MCP3008:
-  - `VDD`: Connect to 3.3V on the Raspberry Pi
+  - `VCC`: Connect to 3.3V on the Raspberry Pi
   - `VREF`: Connect to 3.3V on the Raspberry Pi
   - `AGND`: Connect to Ground (GND)
   - `CLK`: Connect to GPIO11/CLK
   - `MISO`: Connect to GPIO9/MISO
   - `MOSI`: Connect to GPIO10/MOSI
+  - `CS`: Connect to GPIO08/CE0
   - `DGND`: Connect to Ground (GND)
 
 - Soil Moisture Sensor:
@@ -59,15 +69,20 @@ This section outlines the wiring and setup for each individual sensor and the co
   - `GND`: Connect to Ground (GND)
   - `AOUT`: Connect to an analog input through the MCP3008 ADC (Channel 0)
 
-![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/soil_moisture_sensor.png) 
+![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/soil_moisture_sensor_circuit.png) 
 
 2. DHT22 Temperature and Humidity Sensor
+
+The following figure illustrates the DHT22 Pinout:
+
+![DHT22 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/DHT22_pinout.png) 
+
 - `VCC`: Connect to 3.3V on the Raspberry Pi
 - `GND`: Connect to Ground (GND)
 - `DATA`: Connect to a GPIO pin on the Raspberry Pi (e.g., GPIO17)
 - A 10kΩ resistor between the VCC and DATA pins
 
-![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/DHT22_sensor.png)
+![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/DHT22_sensor_circuit.png)
 
 3. BH1750 Light Sensor
 - `VCC`: Connect to 3.3V on the Raspberry Pi
@@ -75,7 +90,7 @@ This section outlines the wiring and setup for each individual sensor and the co
 - `SCL`: Connect to the I2C clock pin (GPIO3/SCL)
 - `SDA`: Connect to the I2C data pin (GPIO2/SDA)
 
-![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/BH1750_sensor.png)
+![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/BH1750_sensor_circuit.png)
 
 4. Water Pump and Relay
 - `VCC`: Connect to 5V on the Raspberry Pi
@@ -85,7 +100,7 @@ This section outlines the wiring and setup for each individual sensor and the co
 - `NO`: Connect to positive wire of the water pump
 - Connect the negative wire of the water pump to the `GND`
 
-![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/water_pump.png)
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/water_pump_circuit.png)
 
 5. Camera
 - Locate the Camera Module port
@@ -252,3 +267,4 @@ https://github.com/user-attachments/assets/c895cc5b-4c57-4dc1-8868-7caac24ee6f7
 ## **References**
 - [Quatltrics, Interpreting Residual Plots to Improve Your Regression](https://www.qualtrics.com/support/stats-iq/analyses/regression-guides/interpreting-residual-plots-improve-regression/)
 - [Raspberry Pi Foundation, Getting started with the Camera Module](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2)
+- [Components101, Raspberry Pi 3 (2018)](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
