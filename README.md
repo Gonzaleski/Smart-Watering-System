@@ -4,6 +4,8 @@
 - [Project Overview](#project-overview)
 - [Project Components](#project-components)
   - [Hardware](#hardware)
+- [Connectivity](#connectivity)
+  - [Individual Sensor Setup](#individual-sensor-setup)
 - [Installation and Usage](#installation-and-usage)
   - [Prerequisites](#prerequisites)
   - [Steps](#steps)
@@ -20,7 +22,8 @@ The Smart Watering System with Internet of Things (IoT) and Neural Network is a 
 ## **Project Components**  
 
 ### **Hardware**  
-- [**Raspberry Pi 3 Model B+**](https://www.raspberrypi.com/products/raspberry-pi-3-model-b-plus/): Central hub for data collection and processing.  
+- **Central hub**:
+  - [Raspberry Pi 3 Model B+](https://www.raspberrypi.com/products/raspberry-pi-3-model-b-plus/)
 - **Sensors**:  
   - [Capacitive Soil Moisture Sensor (v1.2)](https://www.amazon.co.uk/dp/B0814HXWVV/ref=pe_27063361_487055811_TE_dp_2?th=1) 
   - [DHT22 Temperature and Humidity Sensor](https://thepihut.com/products/dht22-temperature-humidity-sensor-extras)
@@ -37,6 +40,61 @@ The Smart Watering System with Internet of Things (IoT) and Neural Network is a 
   - Ethernet for stable connectivity.  
   - Soil and Cress seeds for real-world testing.
  
+## **Connectivity**
+This section outlines the wiring and setup for each individual sensor and the complete system. Fritzing circuit diagrams are included for visual guidance to ensure proper connections.
+
+### **Individual Sensor Setup**
+1. Soil Moisture Sensor and MCP3008 ADC
+- MCP3008:
+  - `VDD`: Connect to 3.3V on the Raspberry Pi
+  - `VREF`: Connect to 3.3V on the Raspberry Pi
+  - `AGND`: Connect to Ground (GND)
+  - `CLK`: Connect to GPIO11/CLK
+  - `MISO`: Connect to GPIO9/MISO
+  - `MOSI`: Connect to GPIO10/MOSI
+  - `DGND`: Connect to Ground (GND)
+
+- Soil Moisture Sensor:
+  - `VCC`: Connect to 3.3V on the Raspberry Pi
+  - `GND`: Connect to Ground (GND)
+  - `AOUT`: Connect to an analog input through the MCP3008 ADC (Channel 0)
+
+![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/soil_moisture_sensor.png) 
+
+2. DHT22 Temperature and Humidity Sensor
+- `VCC`: Connect to 3.3V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `DATA`: Connect to a GPIO pin on the Raspberry Pi (e.g., GPIO17)
+- A 10kΩ resistor between the VCC and DATA pins
+
+![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/DHT22_sensor.png)
+
+3. BH1750 Light Sensor
+- `VCC`: Connect to 3.3V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `SCL`: Connect to the I2C clock pin (GPIO3/SCL)
+- `SDA`: Connect to the I2C data pin (GPIO2/SDA)
+
+![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/BH1750_sensor.png)
+
+4. Water Pump and Relay
+- `VCC`: Connect to 5V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `IN`: Connect to a GPIO pin on the Raspberry Pi (GPIO27)
+- `COM`: Connect to 5V on the Raspberry Pi
+- `NO`: Connect to positive wire of the water pump
+- Connect the negative wire of the water pump to the `GND`
+
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/circuits/water_pump.png)
+
+5. Camera
+- Locate the Camera Module port
+- Gently pull up on the edges of the port’s plastic clip
+- Insert the Camera Module ribbon cable; make sure the connectors at the bottom of the ribbon cable are facing the contacts in the port.
+- Push the plastic clip back into place
+
+![Camera Connection](https://github.com/user-attachments/assets/881ed0da-0683-4369-a13a-9bd4613cd9f2)
+
 ## **Installation and Usage**
 
 ### **Prerequisites**
@@ -193,3 +251,4 @@ https://github.com/user-attachments/assets/c895cc5b-4c57-4dc1-8868-7caac24ee6f7
 
 ## **References**
 - [Quatltrics, Interpreting Residual Plots to Improve Your Regression](https://www.qualtrics.com/support/stats-iq/analyses/regression-guides/interpreting-residual-plots-improve-regression/)
+- [Raspberry Pi Foundation, Getting started with the Camera Module](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2)
