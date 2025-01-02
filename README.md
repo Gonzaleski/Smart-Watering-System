@@ -301,3 +301,4 @@ https://github.com/user-attachments/assets/c895cc5b-4c57-4dc1-8868-7caac24ee6f7
 - [Quatltrics, Interpreting Residual Plots to Improve Your Regression](https://www.qualtrics.com/support/stats-iq/analyses/regression-guides/interpreting-residual-plots-improve-regression/)
 - [Raspberry Pi Foundation, Getting started with the Camera Module](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2)
 - [Components101, Raspberry Pi 3 (2018)](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
+- [MathWorks, Analyze Channel Data to Send Email Notification](https://uk.mathworks.com/help/thingspeak/analyze-channel-data-to-send-email.html)
