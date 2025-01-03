@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [Project Overview](#project-overview)
+  - [YouTube Link](#youtube-link)
 - [System Workflow](#system-workflow)
 - [Hardware](#hardware)
 - [Complete System Wiring](#complete-system-wiring)
@@ -33,6 +34,10 @@ The Smart Watering System with Internet of Things (IoT) and Neural Network is a 
 Utilizing these real-time inputs, a trained neural network predicts the precise amount of water required to maintain optimal plant health, ensuring water is neither wasted nor insufficient. Data from the sensors is seamlessly transmitted to ThingSpeak, an IoT cloud platform, for storage, visualization, and actionable analytics. The system also incorporates MATLAB for advanced data analysis, creating meaningful insights through plots and alert-triggering scripts.
 
 This project is designed as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).
+
+### **YouTube Link**
+
+[Link to the YouTube Video.](https://youtu.be/7oP_TmdXER8)
 
 ## **System Workflow**
 The diagram below shows the workflow of the Smart Watering System. It demonstrates how data flows from sensors to data processing, decision-making, and ultimately, visualization and storage.
