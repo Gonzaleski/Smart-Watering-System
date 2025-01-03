@@ -4,6 +4,7 @@
 - [Project Overview](#project-overview)
 - [System Workflow](#system-workflow)
 - [Hardware](#hardware)
+- [Complete System Wiring](#complete-system-wiring)
 - [ThingSpeak](#thingspeak)
   - [Channel Configuration](#channel-configuration)
   - [MATLAB Visualizations](#matlab-visualizations)
@@ -12,46 +13,73 @@
   - [Automated Alerts and Actions](#automated-alerts-and-actions)
   - [Why ThingSpeak Matters](#why-thingspeak-matters)
   - [View the Channel Yourself!](#view-the-channel-yourself)
-- [Connectivity](#connectivity)
-  - [Individual Sensor Setup](#individual-sensor-setup)
-  - [Complete System Wiring](#complete-system-wiring)
-- [Installation and Usage](#installation-and-usage)
-  - [Prerequisites](#prerequisites)
-  - [Steps](#steps)
 - [Predictive Model Analysis](#predictive-model-analysis)
   - [Training Phase](#training-phase)
   - [Model Evaluation Metrics](#model-evaluation-metrics)
   - [Residual Analysis](#residual-analysis)
+- [Installation and Usage](#installation-and-usage)
+  - [Prerequisites](#prerequisites)
+  - [Steps](#steps)
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
+- [More Information](#more-information)
+- [Individual Sensor Setup](#individual-sensor-setup)
 
-## **Project Overview**  
-The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors plant conditions and intelligently predicts watering needs, ensuring they receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).
+## **Project Overview**
+The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution aimed at optimizing water usage for plant care. By integrating hardware sensors, IoT connectivity, and AI-based predictive model, the system continuously monitors critical plant conditions, including soil moisture, temperature, humidity, and light intensity.
+
+Utilizing these real-time inputs, a trained neural network predicts the precise amount of water required to maintain optimal plant health, ensuring water is neither wasted nor insufficient. Data from the sensors is seamlessly transmitted to ThingSpeak, an IoT cloud platform, for storage, visualization, and actionable analytics. The system also incorporates MATLAB for advanced data analysis, creating meaningful insights through plots and alert-triggering scripts.
+
+This project is designed as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).
 
 ## **System Workflow**
 The diagram below shows the workflow of the Smart Watering System. It demonstrates how data flows from sensors to data processing, decision-making, and ultimately, visualization and storage.
 
 ```mermaid
-graph TD
-    A[Start] --> B[Run main.py every 2 hours]
-    B --> C[Measure sensor data using Python scripts]
-    C -->|Soil Moisture| D1[soil_moisture_sensor.py]
-    C -->|Temperature & Humidity| D2[dht_sensor.py]
-    C -->|Light Level| D3[light_sensor.py]
-    D1 --> E[Data Collected]
-    D2 --> E
-    D3 --> E
-    E --> F[Predict Valve Duration using Neural Network model]
-    F -->|Load model from neural_network_model.onnx| G[Prediction Completed]
-    G --> |Water the Plant| H[Operate 5V relay to control water pump]
-    H --> |Trigger Camera| I[picamera_handler.py]
-    I -->|Capture Image| J[Image File]
-    J -->|Save Locally| K[Local Storage on Raspberry Pi]
-    J --> |Get Dropbox Access Key using the Refresh Token| P[Dropbox Access Key]
-    P --> |Upload to Cloud using the Access Key| L[Dropbox Storage]
-    H --> |Send Data| M[ThingSpeak Channel]
-    M -->|Data Visualization and Analytics| N[ThingSpeak Dashboard]
-    N -->|Send alerts such as waterlog| O[Email]
+flowchart TD
+    subgraph Sensors and Camera
+        A1[Soil Moisture Sensor]
+        A2[DHT22 Temperature & Humidity Sensor]
+        A3[BH1750 Light Sensor]
+        A4[Raspberry Pi Camera Module 3 NoIR]
+    end
+
+    subgraph IoT Channel
+        B1[ThingSpeak IoT Platform]
+        B2[Email Notifications]
+        B3[Data Visualizations]
+        B4[CSV File]
+    end
+
+    subgraph Remote Terminal
+        C1[Dataplicity Terminal]
+    end
+
+    subgraph Dropbox
+        D1[Access Key]
+        D2[Dropbox App]
+    end
+
+    A1 -->|Analog Data| Z1[MCP3008 ADC]
+    A2 --> Z2[Raspberry Pi 3 Model B+]
+    A3 --> Z2
+    A4 --> Z2
+
+    B1 -->|MATLAB Analysis & TimeControl| B2
+    B1 -->|MATLAB Visualization| B3
+    B1 -->|Export Data| B4
+
+    C1 -->|Controls Raspberry Pi Remotely| Z2
+
+    D1 -->|Uploads Images using Access Key| D2
+    D2 -->|Merge Images| F3[Plant Growth Time-Lapse]
+
+    E1 -->|Valve Duration Prediction| Z2
+
+    Z1 -->|Digital Data| Z2
+    Z2 -->|Sends Data using Write API Key| B1
+    Z2 -->|Requests Access Key using Refresh Token| D1
+    Z2 -->|Sensor Data| E1[Neural Network Model]
 ```
 
 ## **Hardware**  
@@ -72,6 +100,13 @@ graph TD
   - [STEMMA QT / Qwiic JST SH 4-pin to Premium Male Headers Cable (150mm Long)](https://thepihut.com/products/stemma-qt-qwiic-jst-sh-4-pin-to-premium-male-headers-cable)
   - Ethernet for stable connectivity.  
   - Soil and Cress seeds for real-world testing
+ 
+## **Complete System Wiring**
+The complete system integrates all the sensors, water pump, and camera, ensuring seamless data collection and automation. The consolidated wiring diagram shows the connections for all components working together:
+
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/complete_circuit.png)
+
+If you want to see the individual sensor setup, go to [Individual Sensor Setup](#individual-sensor-setup).
  
 ## **ThingSpeak**
 
@@ -106,7 +141,6 @@ The following figures illustrate the ThingSpeak channel for this project:
 
 ![ThingSpeak Results 2](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/thingspeak/thingspeak_results_2.png) 
 
-
 #### **Key Observations:**  
 - The Soil Moisture vs. Valve Duration scatter plot highlights an inverse relationship: as soil moisture increases, valve duration decreases.  
 - The Temperature vs. Humidity KDE shows the plant environment is typically in the 20–21°C range with ~60% humidity.
@@ -124,82 +158,62 @@ ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system res
 - Critical Metrics at a Glance: Widgets simplify monitoring by highlighting essential metrics like soil moisture in an intuitive and accessible format.
 
 ### **View the Channel Yourself!**
-You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the user ID: `mwa0000034847465`, and the Smart Watering System channel will be listed for access.
+You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the tag: `Smart Watering System` or user ID: `mwa0000034847465`, and the channel will be listed for access.
 
-## **Connectivity**
-This section outlines the wiring and setup for each individual sensor and the complete system. Fritzing circuit diagrams are included for visual guidance to ensure proper connections.
+## **Predictive Model Analysis**
+The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump based on environmental data. To ensure high accuracy and reliability, three models were evaluated:
+1. Linear Regression
+2. Random Forest
+3. Neural Network
 
-The following figure illustrates the Rasberry Pi 3 Model B+ Pinout:
+### **Training Phase**
+The script, `scripts/train_models.m`, prepares the data, trains the models, and saves them for further analysis and use. The trained models are integral to optimizing water usage by predicting the precise duration for which the valve should remain open based on environmental conditions.
 
-![Raspberry Pi 3 Model B+ Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/raspberry_pi_3_pinout.png) 
+By leveraging MATLAB's robust computational tools, this script simplifies the process of developing, training, and evaluating models, ensuring consistency and accuracy at every step.
 
-### **Individual Sensor Setup**
-1. Soil Moisture Sensor and MCP3008 ADC
+### **Model Evaluation Metrics**
 
-The following figure illustrates the MCP3008 Pinout:
+The performance of these models was assessed using the following metrics:
+- Root Mean Square Error (RMSE): Measures the average magnitude of prediction errors.
+- Mean Absolute Error (MAE): Represents the average absolute difference between predicted and actual values.
+- Residuals: Highlights the distribution of prediction errors.
 
-![MCP3008 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/MCP3008_pinout.png) 
+The following figure presents the RMSE and MAE for each model:
 
-- MCP3008:
-  - `VCC`: Connect to 3.3V on the Raspberry Pi
-  - `VREF`: Connect to 3.3V on the Raspberry Pi
-  - `AGND`: Connect to Ground (GND)
-  - `CLK`: Connect to GPIO11/CLK
-  - `MISO`: Connect to GPIO9/MISO
-  - `MOSI`: Connect to GPIO10/MOSI
-  - `CS`: Connect to GPIO08/CE0
-  - `DGND`: Connect to Ground (GND)
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE.png)
 
-- Soil Moisture Sensor:
-  - `VCC`: Connect to 3.3V on the Raspberry Pi
-  - `GND`: Connect to Ground (GND)
-  - `AOUT`: Connect to an analog input through the MCP3008 ADC (Channel 0)
+The Neural Network demonstrated the best performance, achieving the lowest MAE of 0.05 and RMSE of 0.07. This indicates that the Neural Network can make highly accurate predictions with minimal average error and few significant outliers.
 
-![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/soil_moisture_sensor_circuit.png) 
+The Random Forest model, while not as precise as the Neural Network, performed moderately well. With an MAE of 0.10 and RMSE of 0.15, it captured some non-linear relationships in the data but introduced more error compared to the Neural Network.
 
-2. DHT22 Temperature and Humidity Sensor
+Linear Regression exhibited the highest error rates, with an MAE of 0.26 and RMSE of 0.32. This suggests that it struggled to model the complex relationships inherent in the data, likely due to its linear assumptions.
 
-The following figure illustrates the DHT22 Pinout:
+A comparative visualization of the models' RMSE and MAE is shown below, reinforcing the Neural Network's superior performance:
 
-![DHT22 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/DHT22_pinout.png) 
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
 
-- `VCC`: Connect to 3.3V on the Raspberry Pi
-- `GND`: Connect to Ground (GND)
-- `DATA`: Connect to a GPIO pin on the Raspberry Pi (e.g., GPIO17)
-- A 10kΩ resistor between the VCC and DATA pins
+### **Residual Analysis**
+Residual analysis provides deeper insights into model performance by examining the differences between actual and predicted values. The next figure shows predicted vs. actual plots for each model, along with their respective residual plots.
 
-![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/DHT22_sensor_circuit.png)
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
 
-3. BH1750 Light Sensor
-- `VCC`: Connect to 3.3V on the Raspberry Pi
-- `GND`: Connect to Ground (GND)
-- `SCL`: Connect to the I2C clock pin (GPIO3/SCL)
-- `SDA`: Connect to the I2C data pin (GPIO2/SDA)
+- Neural Network: The predicted vs. actual plot for the Neural Network aligns closely with the diagonal line, reflecting high accuracy. The residual plot shows a symmetrical distribution around zero, with no discernible patterns, indicating a well-calibrated model.
+- Random Forest: While the Random Forest predicted vs. actual plot shows some deviations from the diagonal, its residuals are also symmetrically distributed with no apparent patterns, suggesting reasonable accuracy despite minor inconsistencies.
+- Linear Regression: Linear Regression’s predicted vs. actual plot reveals substantial deviations, and its residual plot shows a clear pattern with a positive slope. This suggests systematic errors and a lack of flexibility in capturing complex data relationships.
 
-![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/BH1750_sensor_circuit.png)
+To facilitate a direct comparison, the following figure combines the predicted vs. actual values of all three models in a single plot and includes a distribution of residuals:
 
-4. Water Pump and Relay
-- `VCC`: Connect to 5V on the Raspberry Pi
-- `GND`: Connect to Ground (GND)
-- `IN`: Connect to a GPIO pin on the Raspberry Pi (GPIO27)
-- `COM`: Connect to 5V on the Raspberry Pi
-- `NO`: Connect to positive wire of the water pump
-- Connect the negative wire of the water pump to the `GND`
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residual_distribution.png)
 
-![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/water_pump_circuit.png)
+The combined predicted vs. actual plot underscores the Neural Network’s accuracy, with its predictions clustered closest to the diagonal. Random Forest follows, while Linear Regression exhibits the greatest deviation.
 
-5. Camera
-- Locate the Camera Module port
-- Gently pull up on the edges of the port’s plastic clip
-- Insert the Camera Module ribbon cable; make sure the connectors at the bottom of the ribbon cable are facing the contacts in the port.
-- Push the plastic clip back into place
+The residual distribution plot further highlights the differences:
 
-![Camera Connection](https://github.com/user-attachments/assets/881ed0da-0683-4369-a13a-9bd4613cd9f2)
+- The Neural Network has the highest peak and the narrowest domain, indicating tightly clustered residuals around zero.
+- Random Forest has a lower peak and a broader spread, showing moderate variability in residuals.
+- Linear Regression exhibits the lowest peak and the widest domain, reflecting larger and more inconsistent residuals.
 
-### **Complete System Wiring**
-The complete system integrates all the sensors, water pump, and camera, ensuring seamless data collection and automation. The consolidated wiring diagram shows the connections for all components working together:
-
-![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/complete_circuit.png)
+Based on the evaluation of RMSE, MAE, and residuals, the Neural Network demonstrated the highest accuracy and consistency among the three models. It successfully captured the complex relationships in the data, making it the most suitable choice for the Smart Watering System’s predictive model. This selection ensures optimal pump activation, minimizing water wastage while maintaining plant health.
 
 ## **Installation and Usage**
 
@@ -296,67 +310,81 @@ Save the file:
 - `Cntrl+X`
 - `y`
 - `Enter`
- 
-## **Predictive Model Analysis**
-The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump based on environmental data. To ensure high accuracy and reliability, three models were evaluated:
-1. Linear Regression
-2. Random Forest
-3. Neural Network
-
-### **Training Phase**
-The script, `scripts/train_models.m`, prepares the data, trains the models, and saves them for further analysis and use. The trained models are integral to optimizing water usage by predicting the precise duration for which the valve should remain open based on environmental conditions.
-
-By leveraging MATLAB's robust computational tools, this script simplifies the process of developing, training, and evaluating models, ensuring consistency and accuracy at every step.
-
-### **Model Evaluation Metrics**
-
-The performance of these models was assessed using the following metrics:
-- Root Mean Square Error (RMSE): Measures the average magnitude of prediction errors.
-- Mean Absolute Error (MAE): Represents the average absolute difference between predicted and actual values.
-- Residuals: Highlights the distribution of prediction errors.
-
-The following figure presents the RMSE and MAE for each model:
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE.png)
-
-The Neural Network demonstrated the best performance, achieving the lowest MAE of 0.05 and RMSE of 0.07. This indicates that the Neural Network can make highly accurate predictions with minimal average error and few significant outliers.
-
-The Random Forest model, while not as precise as the Neural Network, performed moderately well. With an MAE of 0.10 and RMSE of 0.15, it captured some non-linear relationships in the data but introduced more error compared to the Neural Network.
-
-Linear Regression exhibited the highest error rates, with an MAE of 0.26 and RMSE of 0.32. This suggests that it struggled to model the complex relationships inherent in the data, likely due to its linear assumptions.
-
-A comparative visualization of the models' RMSE and MAE is shown below, reinforcing the Neural Network's superior performance:
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
-
-### **Residual Analysis**
-Residual analysis provides deeper insights into model performance by examining the differences between actual and predicted values. The next figure shows predicted vs. actual plots for each model, along with their respective residual plots.
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
-
-- Neural Network: The predicted vs. actual plot for the Neural Network aligns closely with the diagonal line, reflecting high accuracy. The residual plot shows a symmetrical distribution around zero, with no discernible patterns, indicating a well-calibrated model.
-- Random Forest: While the Random Forest predicted vs. actual plot shows some deviations from the diagonal, its residuals are also symmetrically distributed with no apparent patterns, suggesting reasonable accuracy despite minor inconsistencies.
-- Linear Regression: Linear Regression’s predicted vs. actual plot reveals substantial deviations, and its residual plot shows a clear pattern with a positive slope. This suggests systematic errors and a lack of flexibility in capturing complex data relationships.
-
-To facilitate a direct comparison, the following figure combines the predicted vs. actual values of all three models in a single plot and includes a distribution of residuals:
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residual_distribution.png)
-
-The combined predicted vs. actual plot underscores the Neural Network’s accuracy, with its predictions clustered closest to the diagonal. Random Forest follows, while Linear Regression exhibits the greatest deviation.
-
-The residual distribution plot further highlights the differences:
-
-- The Neural Network has the highest peak and the narrowest domain, indicating tightly clustered residuals around zero.
-- Random Forest has a lower peak and a broader spread, showing moderate variability in residuals.
-- Linear Regression exhibits the lowest peak and the widest domain, reflecting larger and more inconsistent residuals.
-
-Based on the evaluation of RMSE, MAE, and residuals, the Neural Network demonstrated the highest accuracy and consistency among the three models. It successfully captured the complex relationships in the data, making it the most suitable choice for the Smart Watering System’s predictive model. This selection ensures optimal pump activation, minimizing water wastage while maintaining plant health.
 
 ## **Plant Growth Time-Lapse**
-https://github.com/user-attachments/assets/c895cc5b-4c57-4dc1-8868-7caac24ee6f7
+https://github.com/user-attachments/assets/f08c9249-cb3b-4409-939e-81bdf88dc75e
 
 ## **References**
 - [Quatltrics, Interpreting Residual Plots to Improve Your Regression](https://www.qualtrics.com/support/stats-iq/analyses/regression-guides/interpreting-residual-plots-improve-regression/)
 - [Raspberry Pi Foundation, Getting started with the Camera Module](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2)
 - [Components101, Raspberry Pi 3 (2018)](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
 - [MathWorks, Analyze Channel Data to Send Email Notification](https://uk.mathworks.com/help/thingspeak/analyze-channel-data-to-send-email.html)
+
+## **More Information**
+
+### **Individual Sensor Setup**
+The following figure illustrates the Rasberry Pi 3 Model B+ Pinout:
+
+![Raspberry Pi 3 Model B+ Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/raspberry_pi_3_pinout.png) 
+
+1. Soil Moisture Sensor and MCP3008 ADC
+
+The following figure illustrates the MCP3008 Pinout:
+
+![MCP3008 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/MCP3008_pinout.png) 
+
+- MCP3008:
+  - `VCC`: Connect to 3.3V on the Raspberry Pi
+  - `VREF`: Connect to 3.3V on the Raspberry Pi
+  - `AGND`: Connect to Ground (GND)
+  - `CLK`: Connect to GPIO11/CLK
+  - `MISO`: Connect to GPIO9/MISO
+  - `MOSI`: Connect to GPIO10/MOSI
+  - `CS`: Connect to GPIO08/CE0
+  - `DGND`: Connect to Ground (GND)
+
+- Soil Moisture Sensor:
+  - `VCC`: Connect to 3.3V on the Raspberry Pi
+  - `GND`: Connect to Ground (GND)
+  - `AOUT`: Connect to an analog input through the MCP3008 ADC (Channel 0)
+
+![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/soil_moisture_sensor_circuit.png) 
+
+2. DHT22 Temperature and Humidity Sensor
+
+The following figure illustrates the DHT22 Pinout:
+
+![DHT22 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/DHT22_pinout.png) 
+
+- `VCC`: Connect to 3.3V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `DATA`: Connect to a GPIO pin on the Raspberry Pi (e.g., GPIO17)
+- A 10kΩ resistor between the VCC and DATA pins
+
+![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/DHT22_sensor_circuit.png)
+
+3. BH1750 Light Sensor
+- `VCC`: Connect to 3.3V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `SCL`: Connect to the I2C clock pin (GPIO3/SCL)
+- `SDA`: Connect to the I2C data pin (GPIO2/SDA)
+
+![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/BH1750_sensor_circuit.png)
+
+4. Water Pump and Relay
+- `VCC`: Connect to 5V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `IN`: Connect to a GPIO pin on the Raspberry Pi (GPIO27)
+- `COM`: Connect to 5V on the Raspberry Pi
+- `NO`: Connect to positive wire of the water pump
+- Connect the negative wire of the water pump to the `GND`
+
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/water_pump_circuit.png)
+
+5. Camera
+- Locate the Camera Module port
+- Gently pull up on the edges of the port’s plastic clip
+- Insert the Camera Module ribbon cable; make sure the connectors at the bottom of the ribbon cable are facing the contacts in the port.
+- Push the plastic clip back into place
+
+![Camera Connection](https://github.com/user-attachments/assets/881ed0da-0683-4369-a13a-9bd4613cd9f2)
