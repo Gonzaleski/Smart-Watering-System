@@ -12,7 +12,7 @@
   - [Widgets for Real-Time Monitoring](#widgets-for-real-time-monitoring)
   - [Channel View](#channel-view)
   - [Automated Alerts and Actions](#automated-alerts-and-actions)
-  - [Data imported from ThingSpeak](#data_imported_from_thingSpeak)
+  - [Imported Data](#imported_data)
   - [Why ThingSpeak Matters](#why-thingspeak-matters)
   - [View the Channel Yourself!](#view-the-channel-yourself)
 - [Predictive Model Analysis](#predictive-model-analysis)
@@ -157,7 +157,7 @@ ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system res
 - `scripts/ThingSpeak/alert.m` runs every 6 hours to check soil moisture levels.  
 - If the soil moisture enters the danger zone (below 30% or above 70%), an email notification is triggered.
 
-### **Data imported from ThingSpeak**
+### **Imported Data**
 
 The data imported from ThingSpeak can be viewed in `results/thingspeak/ThingSpeak_data.csv`.
 
