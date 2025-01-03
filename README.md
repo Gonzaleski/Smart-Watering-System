@@ -36,26 +36,42 @@ This project is designed as part of the [Mathworks Sustainability and Renewable 
 The diagram below shows the workflow of the Smart Watering System. It demonstrates how data flows from sensors to data processing, decision-making, and ultimately, visualization and storage.
 
 ```mermaid
-graph TD
-    A[Start] --> B[Run main.py every 2 hours]
-    B --> C[Measure sensor data using Python scripts]
-    C -->|Soil Moisture| D1[soil_moisture_sensor.py]
-    C -->|Temperature & Humidity| D2[dht_sensor.py]
-    C -->|Light Level| D3[light_sensor.py]
-    D1 --> E[Data Collected]
-    D2 --> E
-    D3 --> E
-    E --> F[Predict Valve Duration using Neural Network model]
-    F -->|Load model from neural_network_model.onnx| G[Prediction Completed]
-    G --> |Water the Plant| H[Operate 5V relay to control water pump]
-    H --> |Trigger Camera| I[picamera_handler.py]
-    I -->|Capture Image| J[Image File]
-    J -->|Save Locally| K[Local Storage on Raspberry Pi]
-    J --> |Get Dropbox Access Key using the Refresh Token| P[Dropbox Access Key]
-    P --> |Upload to Cloud using the Access Key| L[Dropbox Storage]
-    H --> |Send Data| M[ThingSpeak Channel]
-    M -->|Data Visualization and Analytics| N[ThingSpeak Dashboard]
-    N -->|Send alerts such as waterlog| O[Email]
+flowchart TD
+    subgraph Sensors and Camera
+        A1[Soil Moisture Sensor]
+        A2[DHT22 Temperature & Humidity Sensor]
+        A4[BH1750 Light Sensor]
+        A5[Raspberry Pi Camera Module 3 NoIR]
+    end
+
+    subgraph IoT Channel
+        C1[ThingSpeak IoT Platform]
+        F1[Email Notifications]
+        F2[Data Visualizations]
+        A5[Raspberry Pi Camera Module 3 NoIR]
+    end
+
+    A1 --> A3[MCP3008 ADC]
+    A2 --> B1[Raspberry Pi 3 Model B+]
+    A3 --> B1
+    A4 --> B1
+    A5 --> B1
+
+    B1 -->|Ethernet| B2[Dataplicity Terminal]
+    B1 -->|Sends Data| C1
+    B1 -->|Uploads Images| C2[Dropbox App]
+    B1 -->|Sensor Data| D1[Neural Networks Model]
+
+    C1 -->|MATLAB Analysis & TimeControl| F1
+    C1 -->|MATLAB Visualization| F2
+    C2 -->|Stored Images| F3[Plant Images]
+
+    D1 -->|Predict Valve Duration| B1
+
+    E1[main.py] -->|Executes Pipeline| B1
+    E2[train_models.m] -->|Trains Model| D1
+
+
 ```
 
 ## **Hardware**  
