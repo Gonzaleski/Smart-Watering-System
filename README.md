@@ -4,6 +4,7 @@
 - [Project Overview](#project-overview)
 - [System Workflow](#system-workflow)
 - [Hardware](#hardware)
+- [Complete System Wiring](#complete-system-wiring)
 - [ThingSpeak](#thingspeak)
   - [Channel Configuration](#channel-configuration)
   - [MATLAB Visualizations](#matlab-visualizations)
@@ -12,9 +13,6 @@
   - [Automated Alerts and Actions](#automated-alerts-and-actions)
   - [Why ThingSpeak Matters](#why-thingspeak-matters)
   - [View the Channel Yourself!](#view-the-channel-yourself)
-- [Connectivity](#connectivity)
-  - [Individual Sensor Setup](#individual-sensor-setup)
-  - [Complete System Wiring](#complete-system-wiring)
 - [Installation and Usage](#installation-and-usage)
   - [Prerequisites](#prerequisites)
   - [Steps](#steps)
@@ -24,6 +22,8 @@
   - [Residual Analysis](#residual-analysis)
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
+- [More Information](#more-information)
+- [Individual Sensor Setup](#individual-sensor-setup)
 
 ## **Project Overview**
 The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution aimed at optimizing water usage for plant care. By integrating hardware sensors, IoT connectivity, and AI-based predictive model, the system continuously monitors critical plant conditions, including soil moisture, temperature, humidity, and light intensity.
@@ -77,6 +77,13 @@ graph TD
   - Ethernet for stable connectivity.  
   - Soil and Cress seeds for real-world testing
  
+## **Complete System Wiring**
+The complete system integrates all the sensors, water pump, and camera, ensuring seamless data collection and automation. The consolidated wiring diagram shows the connections for all components working together:
+
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/complete_circuit.png)
+
+If you want to see the individual sensor setup, go to [Individual Sensor Setup](#individual-sensor-setup).
+ 
 ## **ThingSpeak**
 
 ThingSpeak serves as the IoT cloud platform for real-time monitoring, data visualization, and analytics in the Smart Watering System. Below is an overview of how the project leverages ThingSpeak for effective data management and insights.
@@ -110,7 +117,6 @@ The following figures illustrate the ThingSpeak channel for this project:
 
 ![ThingSpeak Results 2](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/thingspeak/thingspeak_results_2.png) 
 
-
 #### **Key Observations:**  
 - The Soil Moisture vs. Valve Duration scatter plot highlights an inverse relationship: as soil moisture increases, valve duration decreases.  
 - The Temperature vs. Humidity KDE shows the plant environment is typically in the 20–21°C range with ~60% humidity.
@@ -129,81 +135,6 @@ ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system res
 
 ### **View the Channel Yourself!**
 You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the tag: `Smart Watering System` or user ID: `mwa0000034847465`, and the channel will be listed for access.
-
-## **Connectivity**
-This section outlines the wiring and setup for each individual sensor and the complete system. Fritzing circuit diagrams are included for visual guidance to ensure proper connections.
-
-The following figure illustrates the Rasberry Pi 3 Model B+ Pinout:
-
-![Raspberry Pi 3 Model B+ Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/raspberry_pi_3_pinout.png) 
-
-### **Individual Sensor Setup**
-1. Soil Moisture Sensor and MCP3008 ADC
-
-The following figure illustrates the MCP3008 Pinout:
-
-![MCP3008 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/MCP3008_pinout.png) 
-
-- MCP3008:
-  - `VCC`: Connect to 3.3V on the Raspberry Pi
-  - `VREF`: Connect to 3.3V on the Raspberry Pi
-  - `AGND`: Connect to Ground (GND)
-  - `CLK`: Connect to GPIO11/CLK
-  - `MISO`: Connect to GPIO9/MISO
-  - `MOSI`: Connect to GPIO10/MOSI
-  - `CS`: Connect to GPIO08/CE0
-  - `DGND`: Connect to Ground (GND)
-
-- Soil Moisture Sensor:
-  - `VCC`: Connect to 3.3V on the Raspberry Pi
-  - `GND`: Connect to Ground (GND)
-  - `AOUT`: Connect to an analog input through the MCP3008 ADC (Channel 0)
-
-![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/soil_moisture_sensor_circuit.png) 
-
-2. DHT22 Temperature and Humidity Sensor
-
-The following figure illustrates the DHT22 Pinout:
-
-![DHT22 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/DHT22_pinout.png) 
-
-- `VCC`: Connect to 3.3V on the Raspberry Pi
-- `GND`: Connect to Ground (GND)
-- `DATA`: Connect to a GPIO pin on the Raspberry Pi (e.g., GPIO17)
-- A 10kΩ resistor between the VCC and DATA pins
-
-![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/DHT22_sensor_circuit.png)
-
-3. BH1750 Light Sensor
-- `VCC`: Connect to 3.3V on the Raspberry Pi
-- `GND`: Connect to Ground (GND)
-- `SCL`: Connect to the I2C clock pin (GPIO3/SCL)
-- `SDA`: Connect to the I2C data pin (GPIO2/SDA)
-
-![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/BH1750_sensor_circuit.png)
-
-4. Water Pump and Relay
-- `VCC`: Connect to 5V on the Raspberry Pi
-- `GND`: Connect to Ground (GND)
-- `IN`: Connect to a GPIO pin on the Raspberry Pi (GPIO27)
-- `COM`: Connect to 5V on the Raspberry Pi
-- `NO`: Connect to positive wire of the water pump
-- Connect the negative wire of the water pump to the `GND`
-
-![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/water_pump_circuit.png)
-
-5. Camera
-- Locate the Camera Module port
-- Gently pull up on the edges of the port’s plastic clip
-- Insert the Camera Module ribbon cable; make sure the connectors at the bottom of the ribbon cable are facing the contacts in the port.
-- Push the plastic clip back into place
-
-![Camera Connection](https://github.com/user-attachments/assets/881ed0da-0683-4369-a13a-9bd4613cd9f2)
-
-### **Complete System Wiring**
-The complete system integrates all the sensors, water pump, and camera, ensuring seamless data collection and automation. The consolidated wiring diagram shows the connections for all components working together:
-
-![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/complete_circuit.png)
 
 ## **Installation and Usage**
 
@@ -364,3 +295,72 @@ https://github.com/user-attachments/assets/f08c9249-cb3b-4409-939e-81bdf88dc75e
 - [Raspberry Pi Foundation, Getting started with the Camera Module](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera/2)
 - [Components101, Raspberry Pi 3 (2018)](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
 - [MathWorks, Analyze Channel Data to Send Email Notification](https://uk.mathworks.com/help/thingspeak/analyze-channel-data-to-send-email.html)
+
+## **More Information**
+
+### **Individual Sensor Setup**
+The following figure illustrates the Rasberry Pi 3 Model B+ Pinout:
+
+![Raspberry Pi 3 Model B+ Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/raspberry_pi_3_pinout.png) 
+
+1. Soil Moisture Sensor and MCP3008 ADC
+
+The following figure illustrates the MCP3008 Pinout:
+
+![MCP3008 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/MCP3008_pinout.png) 
+
+- MCP3008:
+  - `VCC`: Connect to 3.3V on the Raspberry Pi
+  - `VREF`: Connect to 3.3V on the Raspberry Pi
+  - `AGND`: Connect to Ground (GND)
+  - `CLK`: Connect to GPIO11/CLK
+  - `MISO`: Connect to GPIO9/MISO
+  - `MOSI`: Connect to GPIO10/MOSI
+  - `CS`: Connect to GPIO08/CE0
+  - `DGND`: Connect to Ground (GND)
+
+- Soil Moisture Sensor:
+  - `VCC`: Connect to 3.3V on the Raspberry Pi
+  - `GND`: Connect to Ground (GND)
+  - `AOUT`: Connect to an analog input through the MCP3008 ADC (Channel 0)
+
+![Soil Mositure Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/soil_moisture_sensor_circuit.png) 
+
+2. DHT22 Temperature and Humidity Sensor
+
+The following figure illustrates the DHT22 Pinout:
+
+![DHT22 Pinout](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/pinout/DHT22_pinout.png) 
+
+- `VCC`: Connect to 3.3V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `DATA`: Connect to a GPIO pin on the Raspberry Pi (e.g., GPIO17)
+- A 10kΩ resistor between the VCC and DATA pins
+
+![DHT22 Temperature and Humidity Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/DHT22_sensor_circuit.png)
+
+3. BH1750 Light Sensor
+- `VCC`: Connect to 3.3V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `SCL`: Connect to the I2C clock pin (GPIO3/SCL)
+- `SDA`: Connect to the I2C data pin (GPIO2/SDA)
+
+![BH1750 Light Sensor Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/BH1750_sensor_circuit.png)
+
+4. Water Pump and Relay
+- `VCC`: Connect to 5V on the Raspberry Pi
+- `GND`: Connect to Ground (GND)
+- `IN`: Connect to a GPIO pin on the Raspberry Pi (GPIO27)
+- `COM`: Connect to 5V on the Raspberry Pi
+- `NO`: Connect to positive wire of the water pump
+- Connect the negative wire of the water pump to the `GND`
+
+![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/water_pump_circuit.png)
+
+5. Camera
+- Locate the Camera Module port
+- Gently pull up on the edges of the port’s plastic clip
+- Insert the Camera Module ribbon cable; make sure the connectors at the bottom of the ribbon cable are facing the contacts in the port.
+- Push the plastic clip back into place
+
+![Camera Connection](https://github.com/user-attachments/assets/881ed0da-0683-4369-a13a-9bd4613cd9f2)
