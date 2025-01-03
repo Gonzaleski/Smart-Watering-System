@@ -128,7 +128,7 @@ ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system res
 - Critical Metrics at a Glance: Widgets simplify monitoring by highlighting essential metrics like soil moisture in an intuitive and accessible format.
 
 ### **View the Channel Yourself!**
-You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the user ID: `mwa0000034847465`, and the Smart Watering System channel will be listed for access.
+You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the tag: `Smart Watering System` or user ID: `mwa0000034847465`, and the channel will be listed for access.
 
 ## **Connectivity**
 This section outlines the wiring and setup for each individual sensor and the complete system. Fritzing circuit diagrams are included for visual guidance to ensure proper connections.
