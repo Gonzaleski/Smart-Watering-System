@@ -168,7 +168,7 @@ The Smart Watering System leverages machine learning models to predict the optim
 
 #### **Synthetic Data Generation**
 
-The synthetic dataset is created using a formula that calculates valve duration based on the following parameters:
+`scripts/generate_data.m`: The synthetic dataset is created using a formula that calculates valve duration based on the following parameters:
 
 1. **Soil Moisture:** Strongly influences the valve duration. If soil moisture exceeds 60%, the valve remains closed to prevent overwatering.
 2. **Temperature, Humidity, and Light Level:** Adjustments are applied to fine-tune the valve duration based on environmental conditions.
@@ -189,6 +189,8 @@ calculateValveDuration = @(soilMoisture, temperature, humidity, lightLevel) ...
 - **Purpose:** This range ensures efficient water usage and avoids overwatering or under-watering accounting for the pump's operational speed.
 
 #### **Data Preprocessing**
+
+`scripts/train_models.m` preprocesses the data and trains the models.
 
 1. Loading the Dataset: The synthetic CSV file is read into a MATLAB table.
 
@@ -296,24 +298,20 @@ The performance of these models was assessed using the following metrics:
 - Mean Absolute Error (MAE): Represents the average absolute difference between predicted and actual values.
 - Residuals: Highlights the distribution of prediction errors.
 
-The following figure presents the RMSE and MAE for each model:
+#### **RMSE & MAE Analysis**
 
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE.png)
-
-The Neural Network demonstrated the best performance, achieving the lowest MAE of 0.05 and RMSE of 0.07. This indicates that the Neural Network can make highly accurate predictions with minimal average error and few significant outliers.
-
-The Random Forest model, while not as precise as the Neural Network, performed moderately well. With an MAE of 0.10 and RMSE of 0.15, it captured some non-linear relationships in the data but introduced more error compared to the Neural Network.
-
-Linear Regression exhibited the highest error rates, with an MAE of 0.26 and RMSE of 0.32. This suggests that it struggled to model the complex relationships inherent in the data, likely due to its linear assumptions.
+- The Neural Network demonstrated the best performance, achieving the lowest MAE of 0.05 and RMSE of 0.07. This indicates that the Neural Network can make highly accurate predictions with minimal average error and few significant outliers.
+- The Random Forest model, while not as precise as the Neural Network, performed moderately well. With an MAE of 0.10 and RMSE of 0.15, it captured some non-linear relationships in the data but introduced more error compared to the Neural Network.
+- Linear Regression exhibited the highest error rates, with an MAE of 0.26 and RMSE of 0.32. This suggests that it struggled to model the complex relationships inherent in the data, likely due to its linear assumptions.
 
 A comparative visualization of the models' RMSE and MAE is shown below, reinforcing the Neural Network's superior performance:
 
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
+![MAE & RMSE Comparison](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
 
 ### **Residual Analysis**
 Residual analysis provides deeper insights into model performance by examining the differences between actual and predicted values. The next figure shows predicted vs. actual plots for each model, along with their respective residual plots.
 
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
+![Residuals](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
 
 - Neural Network: The predicted vs. actual plot for the Neural Network aligns closely with the diagonal line, reflecting high accuracy. The residual plot shows a symmetrical distribution around zero, with no discernible patterns, indicating a well-calibrated model.
 - Random Forest: While the Random Forest predicted vs. actual plot shows some deviations from the diagonal, its residuals are also symmetrically distributed with no apparent patterns, suggesting reasonable accuracy despite minor inconsistencies.
@@ -321,7 +319,7 @@ Residual analysis provides deeper insights into model performance by examining t
 
 To facilitate a direct comparison, the following figure combines the predicted vs. actual values of all three models in a single plot and includes a distribution of residuals:
 
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residual_distribution.png)
+![Residual Distribution](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residual_distribution.png)
 
 The combined predicted vs. actual plot underscores the Neural Network’s accuracy, with its predictions clustered closest to the diagonal. Random Forest follows, while Linear Regression exhibits the greatest deviation.
 
