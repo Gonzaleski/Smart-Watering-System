@@ -12,7 +12,7 @@
   - [Widgets for Real-Time Monitoring](#widgets-for-real-time-monitoring)
   - [Channel View](#channel-view)
   - [Automated Alerts and Actions](#automated-alerts-and-actions)
-  - [Data imported from ThingSpeak](#data_imported_from_thingspeak)
+  - [Data imported from ThingSpeak](#data_imported_from_thingSpeak)
   - [Why ThingSpeak Matters](#why-thingspeak-matters)
   - [View the Channel Yourself!](#view-the-channel-yourself)
 - [Predictive Model Analysis](#predictive-model-analysis)
