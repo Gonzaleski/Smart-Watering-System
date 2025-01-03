@@ -457,6 +457,8 @@ Save the file:
 
 11. Run the program:
 
+Make sure the `SPI` and `I2C` are enabled on Raspberry Pi.
+
 ```bash
 python main.py
 ```
