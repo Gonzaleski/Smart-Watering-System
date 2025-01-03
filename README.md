@@ -106,7 +106,7 @@ The complete system integrates all the sensors, water pump, and camera, ensuring
 
 ![Water Pump and Relay Circuit](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/resources/circuit/complete_circuit.png)
 
-If you want to see the individual sensor setup, go to [Individual Sensor Setup](#individual-sensor-setup).
+[Individual Sensor Setup](#individual-sensor-setup) includes the individual setup for each component.
  
 ## **ThingSpeak**
 
