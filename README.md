@@ -125,8 +125,8 @@ Fields 1 to 4 log real-time sensor data, while Field 5 records predictions from 
 ### **MATLAB Visualizations**
 ThingSpeak integrates MATLAB for advanced data visualization and analysis. Two MATLAB scripts are used for this project:  
 
-1. **Scatter Plot:** Visualizes the relationship between soil moisture and valve duration.  
-2. **KDE Heatmap:** Displays the kernel density estimation for temperature and humidity, revealing key environmental patterns.    
+1. `scripts/soil_moisture_vs_valve_duration.m`: Visualizes the relationship between soil moisture and valve duration.  
+2. `scripts/humidity_vs_temperature.m`: Displays the kernel density estimation for temperature and humidity, revealing key environmental patterns.    
 
 ### **Widgets for Real-Time Monitoring**
 A **gauge widget** is configured to track soil moisture levels at a glance, with states represented as:  
