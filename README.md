@@ -14,12 +14,13 @@
   - [Why ThingSpeak Matters](#why-thingspeak-matters)
   - [View the Channel Yourself!](#view-the-channel-yourself)
 - [Predictive Model Analysis](#predictive-model-analysis)
-  - [Training Phase](#training-phase)
+  - [Data Preparation and Preprocessing](#data_preparation_and_preprocessing)
+  - [Model Training](#model-training)
   - [Model Evaluation Metrics](#model-evaluation-metrics)
-  - [Residual Analysis](#residual-analysis)
 - [Installation and Usage](#installation-and-usage)
   - [Prerequisites](#prerequisites)
   - [Steps](#steps)
+  - [Scripts for Machine Learning](#scripts-for-machine-learning)
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
 - [More Information](#more-information)
@@ -256,7 +257,7 @@ numTrees = 50;
 rfModel = TreeBagger(numTrees, X_train, Y_train, 'Method', 'regression');
 ```
 
-### **Model Saving**
+##### **Model Saving**
 
 ```matlab
 save('../models/random_forest_model.mat', 'rfModel', 'X_test', 'Y_test');
@@ -335,7 +336,7 @@ A comparative visualization of the models' RMSE and MAE is shown below, reinforc
 
 ![MAE & RMSE Comparison](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
 
-### **Residual Analysis**
+#### **Residual Analysis**
 Residual analysis provides deeper insights into model performance by examining the differences between actual and predicted values. The next figure shows predicted vs. actual plots for each model, along with their respective residual plots.
 
 ![Residuals](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
