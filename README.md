@@ -238,6 +238,12 @@ Three machine learning models were trained and evaluated: **Linear Regression**,
 ```matlab
 linRegModel = fitlm(X_train, Y_train);
 ```
+
+##### **Model Saving**
+
+```matlab
+save('../models/linear_regression_model.mat', 'linRegModel', 'X_test', 'Y_test');
+```
 #### **2. Random Forest**
 
 A Random Forest regression model is trained using 50 decision trees. The random seed is reset for reproducibility.
@@ -248,6 +254,12 @@ A Random Forest regression model is trained using 50 decision trees. The random 
 rng(0);
 numTrees = 50;
 rfModel = TreeBagger(numTrees, X_train, Y_train, 'Method', 'regression');
+```
+
+### **Model Saving**
+
+```matlab
+save('../models/random_forest_model.mat', 'rfModel', 'X_test', 'Y_test');
 ```
 
 #### **3. Neural Network**
@@ -290,6 +302,21 @@ net = trainNetwork(X_train, Y_train, layers, options);
 ##### **Training Progress:**
 
 ![Nueral Netowkr Training Progress](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/training_progress.png)
+
+##### **Model Saving**
+
+```matlab
+save('../models/neural_network_model.mat', 'net', 'X_test', 'Y_test');
+```
+
+##### **Exporting the Model to ONNX Format**
+To make the trained neural network compatible with Python, the model is exported to the ONNX format. This requires the Deep Learning Toolbox Converter for ONNX Model Format.
+
+```matlab
+% Export the neural network to ONNX format
+onnxFileName = '../models/neural_network_model.onnx';
+exportONNXNetwork(net, onnxFileName, 'OpsetVersion', 13);
+```
 
 ### **Model Evaluation Metrics**
 
@@ -336,7 +363,7 @@ Based on the evaluation of RMSE, MAE, and residuals, the Neural Network demonstr
 ### **Prerequisites**
 - Hardware Components mentioned above for real-world testing
 - Python 3.11
-- MATLAB with Neural Network Toolbox
+- MATLAB with Deep Learning and Statistics and Machine Learning Toolbox
 - ThingSpeak, Dropbox, and Dataplicity accounts
 
 ### **Steps**
