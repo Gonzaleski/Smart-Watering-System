@@ -25,8 +25,12 @@
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
 
-## **Project Overview**  
-The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution designed to optimize water usage in plant care. Using a combination of hardware sensors, IoT platforms, and AI models, the system monitors plant conditions and intelligently predicts watering needs, ensuring they receive just the right amount of water. This project was built as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).
+## **Project Overview**
+The Smart Watering System with Internet of Things (IoT) and Neural Network is a sustainable solution aimed at optimizing water usage for plant care. By integrating hardware sensors, IoT connectivity, and AI-based predictive model, the system continuously monitors critical plant conditions, including soil moisture, temperature, humidity, and light intensity.
+
+Utilizing these real-time inputs, a trained neural network predicts the precise amount of water required to maintain optimal plant health, ensuring water is neither wasted nor insufficient. Data from the sensors is seamlessly transmitted to ThingSpeak, an IoT cloud platform, for storage, visualization, and actionable analytics. The system also incorporates MATLAB for advanced data analysis, creating meaningful insights through plots and alert-triggering scripts.
+
+This project is designed as part of the [Mathworks Sustainability and Renewable Energy Challenge](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge.html).
 
 ## **System Workflow**
 The diagram below shows the workflow of the Smart Watering System. It demonstrates how data flows from sensors to data processing, decision-making, and ultimately, visualization and storage.
