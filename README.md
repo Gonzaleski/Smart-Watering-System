@@ -13,13 +13,13 @@
   - [Automated Alerts and Actions](#automated-alerts-and-actions)
   - [Why ThingSpeak Matters](#why-thingspeak-matters)
   - [View the Channel Yourself!](#view-the-channel-yourself)
-- [Installation and Usage](#installation-and-usage)
-  - [Prerequisites](#prerequisites)
-  - [Steps](#steps)
 - [Predictive Model Analysis](#predictive-model-analysis)
   - [Training Phase](#training-phase)
   - [Model Evaluation Metrics](#model-evaluation-metrics)
   - [Residual Analysis](#residual-analysis)
+- [Installation and Usage](#installation-and-usage)
+  - [Prerequisites](#prerequisites)
+  - [Steps](#steps)
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
 - [More Information](#more-information)
@@ -40,39 +40,46 @@ flowchart TD
     subgraph Sensors and Camera
         A1[Soil Moisture Sensor]
         A2[DHT22 Temperature & Humidity Sensor]
-        A4[BH1750 Light Sensor]
-        A5[Raspberry Pi Camera Module 3 NoIR]
+        A3[BH1750 Light Sensor]
+        A4[Raspberry Pi Camera Module 3 NoIR]
     end
 
     subgraph IoT Channel
-        C1[ThingSpeak IoT Platform]
-        F1[Email Notifications]
-        F2[Data Visualizations]
-        A5[Raspberry Pi Camera Module 3 NoIR]
-        C3[CSV File]
+        B1[ThingSpeak IoT Platform]
+        B2[Email Notifications]
+        B3[Data Visualizations]
+        B4[CSV File]
     end
 
     subgraph Remote Terminal
-        B2[Dataplicity Terminal]
+        C1[Dataplicity Terminal]
     end
 
-    A1 -->|Analog Data| A3[MCP3008 ADC]
-    A2 --> B1[Raspberry Pi 3 Model B+]
-    A3 -->|Digital Data| B1
-    A4 --> B1
-    A5 --> B1
+    subgraph Dropbox
+        D1[Access Key]
+        D2[Dropbox App]
+    end
 
-    B1 -->|Sends Data| C1
-    B1 -->|Uploads Images| C2[Dropbox App]
-    B1 -->|Sensor Data| D1[Neural Network Model]
-    B2 -->|Control Raspberry Pi Remotely| B1
+    A1 -->|Analog Data| Z1[MCP3008 ADC]
+    A2 --> Z2[Raspberry Pi 3 Model B+]
+    A3 --> Z2
+    A4 --> Z2
 
-    C1 -->|MATLAB Analysis & TimeControl| F1
-    C1 -->|MATLAB Visualization| F2
-    C1 -->|Export Data| C3
-    C2 -->|Merge Images| F3[Plant Growth Time-Lapse]
+    B1 -->|MATLAB Analysis & TimeControl| B2
+    B1 -->|MATLAB Visualization| B3
+    B1 -->|Export Data| B4
 
-    D1 -->|Valve Duration Prediction| B1
+    C1 -->|Controls Raspberry Pi Remotely| Z2
+
+    D1 -->|Uploads Images using Access Key| D2
+    D2 -->|Merge Images| F3[Plant Growth Time-Lapse]
+
+    E1 -->|Valve Duration Prediction| Z2
+
+    Z1 -->|Digital Data| Z2
+    Z2 -->|Sends Data using Write API Key| B1
+    Z2 -->|Requests Access Key using Refresh Token| D1
+    Z2 -->|Sensor Data| E1[Neural Network Model]
 ```
 
 ## **Hardware**  
@@ -152,6 +159,61 @@ ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system res
 
 ### **View the Channel Yourself!**
 You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the tag: `Smart Watering System` or user ID: `mwa0000034847465`, and the channel will be listed for access.
+
+## **Predictive Model Analysis**
+The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump based on environmental data. To ensure high accuracy and reliability, three models were evaluated:
+1. Linear Regression
+2. Random Forest
+3. Neural Network
+
+### **Training Phase**
+The script, `scripts/train_models.m`, prepares the data, trains the models, and saves them for further analysis and use. The trained models are integral to optimizing water usage by predicting the precise duration for which the valve should remain open based on environmental conditions.
+
+By leveraging MATLAB's robust computational tools, this script simplifies the process of developing, training, and evaluating models, ensuring consistency and accuracy at every step.
+
+### **Model Evaluation Metrics**
+
+The performance of these models was assessed using the following metrics:
+- Root Mean Square Error (RMSE): Measures the average magnitude of prediction errors.
+- Mean Absolute Error (MAE): Represents the average absolute difference between predicted and actual values.
+- Residuals: Highlights the distribution of prediction errors.
+
+The following figure presents the RMSE and MAE for each model:
+
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE.png)
+
+The Neural Network demonstrated the best performance, achieving the lowest MAE of 0.05 and RMSE of 0.07. This indicates that the Neural Network can make highly accurate predictions with minimal average error and few significant outliers.
+
+The Random Forest model, while not as precise as the Neural Network, performed moderately well. With an MAE of 0.10 and RMSE of 0.15, it captured some non-linear relationships in the data but introduced more error compared to the Neural Network.
+
+Linear Regression exhibited the highest error rates, with an MAE of 0.26 and RMSE of 0.32. This suggests that it struggled to model the complex relationships inherent in the data, likely due to its linear assumptions.
+
+A comparative visualization of the models' RMSE and MAE is shown below, reinforcing the Neural Network's superior performance:
+
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
+
+### **Residual Analysis**
+Residual analysis provides deeper insights into model performance by examining the differences between actual and predicted values. The next figure shows predicted vs. actual plots for each model, along with their respective residual plots.
+
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
+
+- Neural Network: The predicted vs. actual plot for the Neural Network aligns closely with the diagonal line, reflecting high accuracy. The residual plot shows a symmetrical distribution around zero, with no discernible patterns, indicating a well-calibrated model.
+- Random Forest: While the Random Forest predicted vs. actual plot shows some deviations from the diagonal, its residuals are also symmetrically distributed with no apparent patterns, suggesting reasonable accuracy despite minor inconsistencies.
+- Linear Regression: Linear Regression’s predicted vs. actual plot reveals substantial deviations, and its residual plot shows a clear pattern with a positive slope. This suggests systematic errors and a lack of flexibility in capturing complex data relationships.
+
+To facilitate a direct comparison, the following figure combines the predicted vs. actual values of all three models in a single plot and includes a distribution of residuals:
+
+![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residual_distribution.png)
+
+The combined predicted vs. actual plot underscores the Neural Network’s accuracy, with its predictions clustered closest to the diagonal. Random Forest follows, while Linear Regression exhibits the greatest deviation.
+
+The residual distribution plot further highlights the differences:
+
+- The Neural Network has the highest peak and the narrowest domain, indicating tightly clustered residuals around zero.
+- Random Forest has a lower peak and a broader spread, showing moderate variability in residuals.
+- Linear Regression exhibits the lowest peak and the widest domain, reflecting larger and more inconsistent residuals.
+
+Based on the evaluation of RMSE, MAE, and residuals, the Neural Network demonstrated the highest accuracy and consistency among the three models. It successfully captured the complex relationships in the data, making it the most suitable choice for the Smart Watering System’s predictive model. This selection ensures optimal pump activation, minimizing water wastage while maintaining plant health.
 
 ## **Installation and Usage**
 
@@ -248,61 +310,6 @@ Save the file:
 - `Cntrl+X`
 - `y`
 - `Enter`
- 
-## **Predictive Model Analysis**
-The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump based on environmental data. To ensure high accuracy and reliability, three models were evaluated:
-1. Linear Regression
-2. Random Forest
-3. Neural Network
-
-### **Training Phase**
-The script, `scripts/train_models.m`, prepares the data, trains the models, and saves them for further analysis and use. The trained models are integral to optimizing water usage by predicting the precise duration for which the valve should remain open based on environmental conditions.
-
-By leveraging MATLAB's robust computational tools, this script simplifies the process of developing, training, and evaluating models, ensuring consistency and accuracy at every step.
-
-### **Model Evaluation Metrics**
-
-The performance of these models was assessed using the following metrics:
-- Root Mean Square Error (RMSE): Measures the average magnitude of prediction errors.
-- Mean Absolute Error (MAE): Represents the average absolute difference between predicted and actual values.
-- Residuals: Highlights the distribution of prediction errors.
-
-The following figure presents the RMSE and MAE for each model:
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE.png)
-
-The Neural Network demonstrated the best performance, achieving the lowest MAE of 0.05 and RMSE of 0.07. This indicates that the Neural Network can make highly accurate predictions with minimal average error and few significant outliers.
-
-The Random Forest model, while not as precise as the Neural Network, performed moderately well. With an MAE of 0.10 and RMSE of 0.15, it captured some non-linear relationships in the data but introduced more error compared to the Neural Network.
-
-Linear Regression exhibited the highest error rates, with an MAE of 0.26 and RMSE of 0.32. This suggests that it struggled to model the complex relationships inherent in the data, likely due to its linear assumptions.
-
-A comparative visualization of the models' RMSE and MAE is shown below, reinforcing the Neural Network's superior performance:
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/MAE_RMSE_comparison.png)
-
-### **Residual Analysis**
-Residual analysis provides deeper insights into model performance by examining the differences between actual and predicted values. The next figure shows predicted vs. actual plots for each model, along with their respective residual plots.
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residuals.png)
-
-- Neural Network: The predicted vs. actual plot for the Neural Network aligns closely with the diagonal line, reflecting high accuracy. The residual plot shows a symmetrical distribution around zero, with no discernible patterns, indicating a well-calibrated model.
-- Random Forest: While the Random Forest predicted vs. actual plot shows some deviations from the diagonal, its residuals are also symmetrically distributed with no apparent patterns, suggesting reasonable accuracy despite minor inconsistencies.
-- Linear Regression: Linear Regression’s predicted vs. actual plot reveals substantial deviations, and its residual plot shows a clear pattern with a positive slope. This suggests systematic errors and a lack of flexibility in capturing complex data relationships.
-
-To facilitate a direct comparison, the following figure combines the predicted vs. actual values of all three models in a single plot and includes a distribution of residuals:
-
-![alt text](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/residual_distribution.png)
-
-The combined predicted vs. actual plot underscores the Neural Network’s accuracy, with its predictions clustered closest to the diagonal. Random Forest follows, while Linear Regression exhibits the greatest deviation.
-
-The residual distribution plot further highlights the differences:
-
-- The Neural Network has the highest peak and the narrowest domain, indicating tightly clustered residuals around zero.
-- Random Forest has a lower peak and a broader spread, showing moderate variability in residuals.
-- Linear Regression exhibits the lowest peak and the widest domain, reflecting larger and more inconsistent residuals.
-
-Based on the evaluation of RMSE, MAE, and residuals, the Neural Network demonstrated the highest accuracy and consistency among the three models. It successfully captured the complex relationships in the data, making it the most suitable choice for the Smart Watering System’s predictive model. This selection ensures optimal pump activation, minimizing water wastage while maintaining plant health.
 
 ## **Plant Growth Time-Lapse**
 https://github.com/user-attachments/assets/f08c9249-cb3b-4409-939e-81bdf88dc75e
