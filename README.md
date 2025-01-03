@@ -49,29 +49,30 @@ flowchart TD
         F1[Email Notifications]
         F2[Data Visualizations]
         A5[Raspberry Pi Camera Module 3 NoIR]
+        C3[CSV File]
     end
 
-    A1 --> A3[MCP3008 ADC]
+    subgraph Remote Terminal
+        B2[Dataplicity Terminal]
+    end
+
+    A1 -->|Analog Data| A3[MCP3008 ADC]
     A2 --> B1[Raspberry Pi 3 Model B+]
-    A3 --> B1
+    A3 -->|Digital Data| B1
     A4 --> B1
     A5 --> B1
 
-    B1 -->|Ethernet| B2[Dataplicity Terminal]
     B1 -->|Sends Data| C1
     B1 -->|Uploads Images| C2[Dropbox App]
-    B1 -->|Sensor Data| D1[Neural Networks Model]
+    B1 -->|Sensor Data| D1[Neural Network Model]
+    B2 -->|Control Raspberry Pi Remotely| B1
 
     C1 -->|MATLAB Analysis & TimeControl| F1
     C1 -->|MATLAB Visualization| F2
-    C2 -->|Stored Images| F3[Plant Images]
+    C1 -->|Export Data| C3
+    C2 -->|Merge Images| F3[Plant Growth Time-Lapse]
 
-    D1 -->|Predict Valve Duration| B1
-
-    E1[main.py] -->|Executes Pipeline| B1
-    E2[train_models.m] -->|Trains Model| D1
-
-
+    D1 -->|Valve Duration Prediction| B1
 ```
 
 ## **Hardware**  
