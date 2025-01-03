@@ -125,8 +125,8 @@ Fields 1 to 4 log real-time sensor data, while Field 5 records predictions from 
 ### **MATLAB Visualizations**
 ThingSpeak integrates MATLAB for advanced data visualization and analysis. Two MATLAB scripts are used for this project:  
 
-1. `scripts/soil_moisture_vs_valve_duration.m`: Visualizes the relationship between soil moisture and valve duration.  
-2. `scripts/humidity_vs_temperature.m`: Displays the kernel density estimation for temperature and humidity, revealing key environmental patterns.    
+1. `scripts/ThingSpeak/soil_moisture_vs_valve_duration.m`: Visualizes the relationship between soil moisture and valve duration.  
+2. `scripts/ThingSpeak/humidity_vs_temperature.m`: Displays the kernel density estimation for temperature and humidity, revealing key environmental patterns.    
 
 ### **Widgets for Real-Time Monitoring**
 A **gauge widget** is configured to track soil moisture levels at a glance, with states represented as:  
@@ -147,7 +147,7 @@ The following figures illustrate the ThingSpeak channel for this project:
 
 ### **Automated Alerts and Actions**
 ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system responses:  
-- A MATLAB script runs every 6 hours to check soil moisture levels.  
+- `scripts/ThingSpeak/alert.m` runs every 6 hours to check soil moisture levels.  
 - If the soil moisture enters the danger zone (below 30% or above 70%), an email notification is triggered.  
 
 ### **Why ThingSpeak Matters**
