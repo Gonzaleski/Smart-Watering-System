@@ -161,15 +161,133 @@ ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system res
 You can visit this channel by going to [Public Channels on ThingSpeak](https://thingspeak.mathworks.com/channels/public). Search for the tag: `Smart Watering System` or user ID: `mwa0000034847465`, and the channel will be listed for access.
 
 ## **Predictive Model Analysis**
-The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump based on environmental data. To ensure high accuracy and reliability, three models were evaluated:
-1. Linear Regression
-2. Random Forest
-3. Neural Network
 
-### **Training Phase**
-The script, `scripts/train_models.m`, prepares the data, trains the models, and saves them for further analysis and use. The trained models are integral to optimizing water usage by predicting the precise duration for which the valve should remain open based on environmental conditions.
+### **Data Preparation and Preprocessing**
 
-By leveraging MATLAB's robust computational tools, this script simplifies the process of developing, training, and evaluating models, ensuring consistency and accuracy at every step.
+The Smart Watering System leverages machine learning models to predict the optimal duration for activating the water pump, based on environmental sensor data such as soil moisture, temperature, humidity, and light levels. To achieve accurate predictions, the project utilizes a synthetically generated dataset that closely simulates real-world conditions.
+
+#### **Synthetic Data Generation**
+
+The synthetic dataset is created using a formula that calculates valve duration based on the following parameters:
+
+1. **Soil Moisture:** Strongly influences the valve duration. If soil moisture exceeds 60%, the valve remains closed to prevent overwatering.
+2. **Temperature, Humidity, and Light Level:** Adjustments are applied to fine-tune the valve duration based on environmental conditions.
+
+The formula is:
+
+```matlab
+calculateValveDuration = @(soilMoisture, temperature, humidity, lightLevel) ...
+    (soilMoisture <= 60) * ...
+    max(0.0, min(3.0, ...
+    5 * (1 - (soilMoisture / 60)) + ...
+    max(0, (temperature - 20) * 0.05) - ...
+    max(0, (humidity - 50) * 0.02) + ...
+    (lightLevel / 2000)));
+```
+
+- **Output Range:** The valve duration is capped between 0 and 3 seconds.
+- **Purpose:** This range ensures efficient water usage and avoids overwatering or under-watering accounting for the pump's operational speed.
+
+#### **Data Preprocessing**
+
+1. Loading the Dataset: The synthetic CSV file is read into a MATLAB table.
+
+```matlab
+data = readtable('../data/system_data.csv');
+```
+
+2. Feature and Target Extraction
+
+- Features: Soil Moisture (%), Temperature (°C), Humidity (%), Light Level (lx)
+- Target: Valve Duration (s)
+
+```matlab
+X = data{:, {'SoilMoisture___', 'Temperature__C_', 'Humidity___', 'LightLevel_lx_'}};
+Y = data{:, 'ValveDuration_s_'};
+```
+
+3. Feature Normalization: Features are scaled to zero mean and unit variance to improve model performance.
+
+```matlab
+X = normalize(X);
+```
+
+4. Data Splitting:
+
+- Training set: 80% of the data
+- Testing set: 20% of the data
+
+```matlab
+cv = cvpartition(size(data, 1), 'HoldOut', 0.2);
+X_train = X(training(cv), :);
+Y_train = Y(training(cv), :);
+X_test = X(test(cv), :);
+Y_test = Y(test(cv), :);
+```
+
+### **Model Training**
+
+Three machine learning models were trained and evaluated: **Linear Regression**, **Random Forest**, and a **Neural Network**.
+
+#### **1. Linear Regression**
+
+##### **Training Code:**
+
+```matlab
+linRegModel = fitlm(X_train, Y_train);
+```
+#### **2. Random Forest**
+
+A Random Forest regression model is trained using 50 decision trees. The random seed is reset for reproducibility.
+
+##### **Training Code:**
+
+```matlab
+rng(0);
+numTrees = 50;
+rfModel = TreeBagger(numTrees, X_train, Y_train, 'Method', 'regression');
+```
+
+#### **3. Neural Network**
+
+A feedforward neural network is defined with the following architecture:
+- Input layer for the features
+- Two fully connected layers with ReLU activation
+- Output layer for regression
+- Regression layer for training
+
+The training options are configured as follows:
+
+- Optimizer: adam
+- Maximum Epochs: 50
+- MiniBatch Size: 32
+- Training progress plots enabled
+
+##### **Training Code:**
+
+```matlab
+layers = [
+    featureInputLayer(size(X_train, 2))
+    fullyConnectedLayer(64)
+    reluLayer
+    fullyConnectedLayer(32)
+    reluLayer
+    fullyConnectedLayer(1)
+    regressionLayer
+];
+
+options = trainingOptions('adam', ...
+    'MaxEpochs', 50, ...
+    'MiniBatchSize', 32, ...
+    'Plots', 'training-progress', ...
+    'Verbose', false);
+
+net = trainNetwork(X_train, Y_train, layers, options);
+```
+
+##### **Training Progress:**
+
+![Nueral Netowkr Training Progress](https://github.com/Gonzaleski/Smart-Watering-System/blob/main/results/plots/training_progress.png)
 
 ### **Model Evaluation Metrics**
 
