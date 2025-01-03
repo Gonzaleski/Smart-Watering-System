@@ -384,7 +384,7 @@ pip install -r requirements.txt
 - Select `App folder`
 - Give your app a name and tap on `Create App`
 - In `Settings`, record your App Key
-- In `Permissions`, `file.metadata.write`, `file.metadata.read`, `file.content.write`, and `file.content.read`
+- In `Permissions`, enable `file.metadata.write`, `file.metadata.read`, `file.content.write`, and `file.content.read`
 - Click on `Submit`
 
 8. Get a Dropbox refresh token:
@@ -393,7 +393,7 @@ pip install -r requirements.txt
 python scripts/get_refresh_token.py 
 ```
 
-Record the value.
+Record the refresh token value.
 
 9. Create a ThingSpeak Channel:
 
@@ -426,6 +426,29 @@ Save the file:
 - `Cntrl+X`
 - `y`
 - `Enter`
+
+11. Run the program:
+
+```bash
+python main.py
+```
+
+- If you want to run the program without the hardware, you can change the following files to send random integers instead of using the libraries:
+  - `camera/picamera_handler.py`
+  - `sensors/dht_sensor.py`
+  - `sensors/light_sensor.py`
+  - `sensors/soil_moisture_sensor.py`
+
+### **Scripts for Machine Learning**
+
+- Open MATLAB
+- To generate data: `scripts/generate_data.m`
+- To train the models: `scripts/train_models.m`
+- To visualize the results: `scripts/visualize_models.m`
+- To calculate mean and standard deviation for dataset features: `scripts/calculate_mean_and_standard_deviation_values.m`
+- To test the neural network model with sample data: `scripts/test.m`
+  - Optionally change the sample data
+  - Fill the mean_values and the std_values with the output of the `scripts/calculate_mean_and_standard_deviation_values.m` script
 
 ## **Plant Growth Time-Lapse**
 https://github.com/user-attachments/assets/f08c9249-cb3b-4409-939e-81bdf88dc75e
