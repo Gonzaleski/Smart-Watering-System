@@ -433,7 +433,7 @@ Save the file:
 python main.py
 ```
 
-- If you want to run the program without the hardware, you can change the following files to send random integers instead of using the libraries:
+- For the purpose of testing without the hardware, the following files  can be modified to send random integers instead of using the libraries:
   - `camera/picamera_handler.py`
   - `sensors/dht_sensor.py`
   - `sensors/light_sensor.py`
