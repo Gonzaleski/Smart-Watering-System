@@ -149,7 +149,11 @@ The following figures illustrate the ThingSpeak channel for this project:
 ### **Automated Alerts and Actions**
 ThingSpeak's MATLAB analysis scripts and TimeControl feature automate system responses:  
 - `scripts/ThingSpeak/alert.m` runs every 6 hours to check soil moisture levels.  
-- If the soil moisture enters the danger zone (below 30% or above 70%), an email notification is triggered.  
+- If the soil moisture enters the danger zone (below 30% or above 70%), an email notification is triggered.
+
+### **Data imported from ThingSpeak**
+
+The data imported from ThingSpeak can be viewed in `results/thingspeak/ThingSpeak_data.csv`.
 
 ### **Why ThingSpeak Matters**
 - ThingSpeak enhances the Smart Watering System by turning raw data into actionable insights and enabling proactive system management:
