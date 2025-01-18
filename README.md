@@ -23,6 +23,7 @@
   - [Prerequisites](#prerequisites)
   - [Steps](#steps)
   - [Scripts for Machine Learning](#scripts-for-machine-learning)
+- [Capturing Soil Moisture using Simulink](#capturing_soil_moisture_using_simulink)
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
 - [More Information](#more-information)
@@ -392,15 +393,7 @@ cd Smart-Watering-System
 - In `Permissions`, enable `file.metadata.write`, `file.metadata.read`, `file.content.write`, and `file.content.read`
 - Click on `Submit`
 
-4. Get a Dropbox refresh token:
-
-```bash
-python scripts/get_refresh_token.py 
-```
-
-Record the refresh token value.
-
-5. Create a ThingSpeak Channel:
+4. Create a ThingSpeak Channel:
 
 - Login to https://thingspeak.mathworks.com/login?skipSSOCheck=true
 - Tap on `New Channel`
@@ -413,7 +406,7 @@ Record the refresh token value.
 - `Save Channel`
 - In `API Keys`, redord your `Write API Key`
 
-6. Create the environmental variables:
+5. Create the environmental variables:
 
 ```bash
 nano .env
@@ -430,7 +423,7 @@ Save the file:
 - `y`
 - `Enter`
 
-7. Run the program:
+6. Run the program:
 
 Make sure the `SPI` and `I2C` are enabled on Raspberry Pi.
 
@@ -450,6 +443,9 @@ main
 - To test the neural network model with sample data: `scripts/test.m`
   - Optionally change the sample data
   - Fill the mean_values and the std_values with the output of the `scripts/calculate_mean_and_standard_deviation_values.m` script
+ 
+## **Capturing Soil Moisture using Simulink**
+https://github.com/user-attachments/assets/f7a45870-4184-4d06-9171-1db47f2ca61e
 
 ## **Plant Growth Time-Lapse**
 https://github.com/user-attachments/assets/f08c9249-cb3b-4409-939e-81bdf88dc75e
