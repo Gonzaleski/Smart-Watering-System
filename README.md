@@ -320,15 +320,6 @@ net = trainNetwork(X_train, Y_train, layers, options);
 save('../models/neural_network_model.mat', 'net', 'X_test', 'Y_test');
 ```
 
-##### **Exporting the Model to ONNX Format**
-To make the trained neural network compatible with Python, the model is exported to the ONNX format. This requires the Deep Learning Toolbox Converter for ONNX Model Format.
-
-```matlab
-% Export the neural network to ONNX format
-onnxFileName = '../models/neural_network_model.onnx';
-exportONNXNetwork(net, onnxFileName, 'OpsetVersion', 13);
-```
-
 ### **Model Evaluation Metrics**
 
 The performance of these models was assessed using the following metrics:
@@ -390,31 +381,7 @@ git clone https://github.com/Gonzaleski/Smart-Watering-System.git
 cd Smart-Watering-System
 ```
 
-3. Install Python virtual environment package:
-
-```bash
-pip install virtualenv
-```
-
-4. Create a virtual environment:
-
-```bash
-python -m venv venv
-```
-
-5. Activate the virtual environment:
-
-```bash
-source venv/bin/activate
-```
-
-6. Install the requirements:
-
-```bash
-pip install -r requirements.txt
-```
-
-7. Create a Dropbox App:
+3. Create a Dropbox App:
 
 - Login to https://www.dropbox.com/developers/apps
 - Tap on `Create App`
@@ -425,7 +392,7 @@ pip install -r requirements.txt
 - In `Permissions`, enable `file.metadata.write`, `file.metadata.read`, `file.content.write`, and `file.content.read`
 - Click on `Submit`
 
-8. Get a Dropbox refresh token:
+4. Get a Dropbox refresh token:
 
 ```bash
 python scripts/get_refresh_token.py 
@@ -433,7 +400,7 @@ python scripts/get_refresh_token.py
 
 Record the refresh token value.
 
-9. Create a ThingSpeak Channel:
+5. Create a ThingSpeak Channel:
 
 - Login to https://thingspeak.mathworks.com/login?skipSSOCheck=true
 - Tap on `New Channel`
@@ -446,7 +413,7 @@ Record the refresh token value.
 - `Save Channel`
 - In `API Keys`, redord your `Write API Key`
 
-10. Create the environmental variables:
+6. Create the environmental variables:
 
 ```bash
 nano .env
@@ -455,9 +422,7 @@ nano .env
 Paste the following code in it:
 
 ```bash
-THINGSPEAK_WRITE_API_KEY="Your_ThingSpeak_Write_API_Key"
-DROPBOX_APP_KEY="Your_Dropbox_App_Key"
-DROPBOX_REFRESH_TOKEN="Refresh_Token_Recorded_Above"
+API_KEY="Your_ThingSpeak_Write_API_Key"
 ```
 
 Save the file:
@@ -465,19 +430,15 @@ Save the file:
 - `y`
 - `Enter`
 
-11. Run the program:
+7. Run the program:
 
 Make sure the `SPI` and `I2C` are enabled on Raspberry Pi.
 
-```bash
-python main.py
-```
+Run the program in the MATLAB Command Window:
 
-- For the purpose of testing without the hardware, the following files  can be modified to send random integers instead of using the libraries:
-  - `camera/picamera_handler.py`
-  - `sensors/dht_sensor.py`
-  - `sensors/light_sensor.py`
-  - `sensors/soil_moisture_sensor.py`
+```matlab
+main
+```
 
 ### **Scripts for Machine Learning**
 
