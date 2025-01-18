@@ -23,7 +23,7 @@
   - [Prerequisites](#prerequisites)
   - [Steps](#steps)
   - [Scripts for Machine Learning](#scripts-for-machine-learning)
-- [Capturing Soil Moisture using Simulink](#capturing_soil_moisture_using_simulink)
+- [Capturing Soil Moisture using Simulink](#capturing-soil-moisture-using-simulink)
 - [Plant Growth Time-Lapse](#plant-growth-time-lapse)
 - [References](#references)
 - [More Information](#more-information)
