@@ -37,7 +37,7 @@ This project is designed as part of the [Mathworks Sustainability and Renewable 
 
 ### **YouTube Link**
 
-[Link to the YouTube Video.](https://youtu.be/7oP_TmdXER8)
+[![Link to the YouTube Video](https://img.youtube.com/vi/7oP_TmdXER8/0.jpg)](https://www.youtube.com/watch?v=7oP_TmdXER8)
 
 ## **System Workflow**
 The diagram below shows the workflow of the Smart Watering System. It demonstrates how data flows from sensors to data processing, decision-making, and ultimately, visualization and storage.
