@@ -445,7 +445,7 @@ main
   - Fill the mean_values and the std_values with the output of the `scripts/calculate_mean_and_standard_deviation_values.m` script
  
 ## **Capturing Soil Moisture using Simulink**
-https://github.com/user-attachments/assets/ecaa8187-04df-4919-abde-1e7c7f820026
+https://github.com/user-attachments/assets/ef57deae-c313-46e5-ae23-650645be34ba
 
 ## **Plant Growth Time-Lapse**
 https://github.com/user-attachments/assets/f08c9249-cb3b-4409-939e-81bdf88dc75e
