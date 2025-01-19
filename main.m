@@ -10,13 +10,10 @@ clear; clc;
 
 % Load environment variables
 envVars = readEnv('.env');
-apiKey = envVars.API_KEY;
-dropboxAppKey = envVars.DROPBOX_APP_KEY;
-refreshToken = envVars.DROPBOX_REFRESH_TOKEN;
+apiKey = envVars.THINGSPEAK_WRITE_API_KEY;
 
 % Initialize API sender
 thingspeakSender = ThingSpeakSender(apiKey);
-dropboxUploader = DropboxUploader(dropboxAppKey, refreshToken);  % Pass Dropbox credentials
 
 % Initialize system
 rpi = initializeRaspberryPi();
@@ -71,7 +68,8 @@ while true
     % Take a picture and upload to Dropbox
     imagePath = takePicture();  % Implement this function to capture an image
     if ~isempty(imagePath)
-        dropboxUploader.upload(imagePath);  % Upload the captured image
+        uploadToDropbox(dropboxAccessToken, imagePath);
+        disp('File uploaded successfully.');
     end
 
     % Delay for 2 hours
