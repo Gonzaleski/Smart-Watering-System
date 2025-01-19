@@ -3,6 +3,7 @@ addpath('models');
 addpath('utils');
 addpath('sensors');
 addpath('communication');
+addpath('camera');
 
 % Clear workspace and command window
 clear; clc;
@@ -10,9 +11,12 @@ clear; clc;
 % Load environment variables
 envVars = readEnv('.env');
 apiKey = envVars.API_KEY;
+dropboxAppKey = envVars.DROPBOX_APP_KEY;
+refreshToken = envVars.DROPBOX_REFRESH_TOKEN;
 
-% Use the API key as needed
+% Initialize API sender
 thingspeakSender = ThingSpeakSender(apiKey);
+dropboxUploader = DropboxUploader(dropboxAppKey, refreshToken);  % Pass Dropbox credentials
 
 % Initialize system
 rpi = initializeRaspberryPi();
@@ -63,6 +67,12 @@ while true
 
     % Send data to ThingSpeak
     sendDataToThingSpeak(thingspeakSender, temperature, humidity, lightLevelValue, soilMoisturePercentage);
+
+    % Take a picture and upload to Dropbox
+    imagePath = takePicture();  % Implement this function to capture an image
+    if ~isempty(imagePath)
+        dropboxUploader.upload(imagePath);  % Upload the captured image
+    end
 
     % Delay for 2 hours
     pause(2 * 60 * 60);
