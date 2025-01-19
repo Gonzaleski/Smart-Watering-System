@@ -393,7 +393,21 @@ cd Smart-Watering-System
 - In `Permissions`, enable `file.metadata.write`, `file.metadata.read`, `file.content.write`, and `file.content.read`
 - Click on `Submit`
 
-4. Create a ThingSpeak Channel:
+4. Get a Dropbox refresh token:
+
+```bash
+cd scripts
+```
+
+Run the program in the MATLAB Command Window:
+
+```matlab
+get_refresh_token.m
+```
+
+Record the refresh token value.
+
+5. Create a ThingSpeak Channel:
 
 - Login to https://thingspeak.mathworks.com/login?skipSSOCheck=true
 - Tap on `New Channel`
@@ -406,7 +420,7 @@ cd Smart-Watering-System
 - `Save Channel`
 - In `API Keys`, redord your `Write API Key`
 
-5. Create the environmental variables:
+6. Create the environmental variables:
 
 ```bash
 nano .env
@@ -415,7 +429,9 @@ nano .env
 Paste the following code in it:
 
 ```bash
-API_KEY="Your_ThingSpeak_Write_API_Key"
+THINGSPEAK_WRITE_API_KEY="Your_ThingSpeak_Write_API_Key"
+DROPBOX_APP_KEY="Your_Dropbox_App_Key"
+DROPBOX_REFRESH_TOKEN="Refresh_Token_Recorded_Above"
 ```
 
 Save the file:
@@ -423,7 +439,7 @@ Save the file:
 - `y`
 - `Enter`
 
-6. Run the program:
+7. Run the program:
 
 Make sure the `SPI` and `I2C` are enabled on Raspberry Pi.
 
