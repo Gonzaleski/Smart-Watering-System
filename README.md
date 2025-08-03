@@ -1,5 +1,7 @@
 # Smart Watering System with IoT and Neural Network 🌱
 
+### **[Winner of MathWorks' Sustainability and Renewable Energy Challenge 🏆](https://uk.mathworks.com/academia/students/competitions/student-challenge/sustainability-and-renewable-energy-challenge/2024-winners.html)**
+
 ## Table of Contents
 - [Project Overview](#project-overview)
   - [YouTube Link](#youtube-link)
